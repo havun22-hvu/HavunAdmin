@@ -70,7 +70,10 @@ Website en app ontwikkeling
 ## Leveranciers & Kosten
 
 ### Vaste Kosten (maandelijks)
-- **Hosting (Hetzner)**: ~€5,00 per maand (wisselend)
+- **Hosting (Hetzner)**:
+  - Herdenkingsportaal server (188.245.159.115): ~€5,00/maand
+  - HavunAdmin dedicated server (46.224.31.30): €8,70/maand (€7,25 + €1,45 backups)
+  - **Subtotaal hosting**: ~€13,70/maand
 - **Domain registraties**: €1,01 per maand (€12,08 per jaar voor 2 domeinen)
   - herdenkingsportaal.nl: €6,04/jaar (via mijn.host)
   - havun.nl: €6,04/jaar (via mijn.host)
@@ -85,8 +88,12 @@ Website en app ontwikkeling
 - **Overige**: [IN TE VULLEN]
 
 ### Totale Vaste Kosten
-- **Per maand**: ~€128,90
-- **Per jaar**: ~€1.546,80
+- **Per maand**: ~€137,60 (was €128,90, +€8,70 voor HavunAdmin server)
+  - Hosting: €13,70
+  - Domains: €1,01
+  - Bunq: €13,99
+  - Claude AI: €108,90
+- **Per jaar**: ~€1.651,20
 
 ## API Credentials
 

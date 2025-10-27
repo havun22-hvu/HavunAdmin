@@ -1,11 +1,17 @@
 # Havun Admin - Project Status
 
-**Laatst bijgewerkt**: 27 oktober 2025 - 22:45
+**Laatst bijgewerkt**: 28 oktober 2025 - 21:30
 
 ## Huidige Fase
-🟢 **Phase 3 - Advanced Features (In Progress)**
+🟢 **STAGING DEPLOYMENT COMPLEET** ✅
 ✅ Phase 1 MVP Development - COMPLEET
 ✅ Phase 2 API Integrations - Mollie COMPLEET
+✅ Phase 3 Advanced Features - Tax Exports COMPLEET
+✅ **Phase 4 Staging Deployment - COMPLEET (28 oktober 2025)** ✨
+
+**Live URL**: https://staging.admin.havun.nl
+**Server**: Dedicated Hetzner (46.224.31.30)
+**Status**: Applicatie operationeel, dashboard werkend, ready for testing
 
 ## Voortgang Overzicht
 
@@ -102,12 +108,17 @@
 - [ ] Grafieken en visualisaties
 - [ ] Automatische categorisering van uitgaven
 
-#### Deployment
-- [ ] Hetzner server configureren
-- [ ] Domain: admin.havun.nl
-- [ ] SSL certificaat
-- [ ] Database setup (MySQL)
-- [ ] Cron jobs voor automatische sync
+#### Deployment - STAGING ✅ COMPLEET (28 oktober 2025)
+- [x] Dedicated Hetzner server opgezet (46.224.31.30) ✅
+- [x] Domain: staging.admin.havun.nl ✅
+- [x] SSL certificaat (Let's Encrypt, geldig tot 2026-01-25) ✅
+- [x] Database setup MySQL (havunadmin_staging) ✅
+- [x] Admin user aangemaakt ✅
+- [x] Apache + PHP-FPM configuratie ✅
+- [x] Alle Laravel dependencies geïnstalleerd ✅
+- [x] Dashboard SQL fix (SQLite → MySQL conversie) ✅
+- [ ] Cron jobs voor automatische sync (nog te doen)
+- [ ] Production deployment (admin.havun.nl) (nog te doen)
 
 ## API Status Details
 
@@ -212,10 +223,12 @@
 - [ ] Payment provider: Nog te bepalen (IDSee), N.v.t. (Judotoernooi)
 
 ### Technical
-- [x] Domein voor HavunAdmin: admin.havun.nl ✅
-- [x] Hosting: Zelfde Hetzner server als Herdenkingsportaal ✅
-- [x] Database: Gedeelde MySQL instance (aparte database) ✅
-- [x] SSL certificaat: Via Let's Encrypt ✅
+- [x] Domein voor HavunAdmin: staging.admin.havun.nl (staging) + admin.havun.nl (production) ✅
+- [x] Hosting: **Dedicated Hetzner server (46.224.31.30)** - NIET gedeeld met Herdenkingsportaal ✅
+- [x] Database: MySQL 8.0 op dedicated server (havunadmin_staging) ✅
+- [x] SSL certificaat: Via Let's Encrypt (geldig tot 2026-01-25) ✅
+- [x] Stack: Apache 2.4.58 + PHP 8.2-FPM + MySQL 8.0 ✅
+- [x] Remote database access: Herdenkingsportaal database (188.245.159.115) ⚠️ nog te configureren
 
 ## Volgende Stappen
 
@@ -250,13 +263,26 @@
 - [ ] Grafieken
 - [ ] Automatische categorisering
 
-### 6. Deployment (1-2 dagen)
-- [ ] Hetzner configuratie
-- [ ] Domain setup
-- [ ] SSL certificaat
-- [ ] Database migratie
-- [ ] Cron jobs
-- [ ] Bunq API key configureren (binnen 3 uur!)
+### 6. Deployment - STAGING ✅ COMPLEET (28 oktober 2025)
+- [x] Hetzner server configuratie ✅
+- [x] Domain setup (staging.admin.havun.nl) ✅
+- [x] SSL certificaat (Let's Encrypt) ✅
+- [x] Database migratie (14 tabellen) ✅
+- [x] Apache + PHP-FPM setup ✅
+- [x] Permissions en security ✅
+- [x] Admin user aangemaakt ✅
+- [ ] Cron jobs (nog te doen)
+- [ ] Bunq API key configureren (wacht op productie, binnen 3 uur na aanmaken!)
+
+### 7. Production Deployment (nog te plannen)
+- [ ] Domain setup (admin.havun.nl)
+- [ ] Production database setup
+- [ ] Production .env configuratie
+- [ ] Bunq API key aanmaken (LET OP: 3-uurs regel!)
+- [ ] Remote database access Herdenkingsportaal
+- [ ] Cron jobs configureren
+- [ ] Monitoring en logging setup
+- [ ] Backup strategie
 
 ## Tijdsschatting
 
@@ -304,8 +330,90 @@
 ✅ **Omgevingen**: Local, Staging, Production
 ✅ **Belasting focus**: Omzetbelasting aangifte (1-klik export)
 
+## Deployment History
+
+### 28 Oktober 2025 - Staging Deployment COMPLEET ✅
+
+**Belangrijke Beslissing: Dedicated Server**
+- **Context**: Oorspronkelijk plan was deployment op gedeelde Hetzner server met Herdenkingsportaal (188.245.159.115)
+- **Probleem**: "stom, dat hadden weerst even moeten overleggen !" - gebruiker wilde aparte server
+- **Reden**: "we gaan naar een eigen server, er komen nog meer apps aan die daar ook op moeten"
+- **Beslissing**: Nieuwe dedicated server (46.224.31.30) voor alle Havun business tools
+- **Cleanup**: Hetzner deployment volledig verwijderd (database, files, Apache config)
+
+**Server Setup:**
+- Server: Hetzner CPX22 (46.224.31.30)
+- OS: Ubuntu 22.04 LTS
+- Stack: Apache 2.4.58 + PHP 8.2-FPM + MySQL 8.0
+- Domain: staging.admin.havun.nl
+- SSL: Let's Encrypt (geldig tot 2026-01-25)
+
+**Deployment Issues & Fixes:**
+
+1. **MySQL Root Password Issue**
+   - Error: `Access denied for user 'root'@'localhost'`
+   - Oorzaak: Fresh MySQL installation, root niet geconfigureerd
+   - Fix: Gebruikt debian-sys-maint credentials om root password te zetten
+   - Password: 7Ut0xaLzh7s^T2!DmQKR
+
+2. **PHP-FPM Not Enabled**
+   - Error: Apache toonde PHP source code in plaats van te executen
+   - Fix: `a2enmod proxy_fcgi setenvif` + `a2enconf php8.2-fpm` + restart Apache
+
+3. **Git Dubious Ownership**
+   - Error: `fatal: detected dubious ownership in repository`
+   - Fix: `git config --global --add safe.directory /var/www/staging`
+
+4. **Local Changes Blocking Pull**
+   - Error: Local DashboardController changes blocking git pull
+   - Fix: `git stash` om lokale changes tijdelijk op te slaan
+
+5. **SQL Syntax Error - SQLite vs MySQL** ⚠️ KRITIEK
+   - Error: `SQLSTATE[42000]: Syntax error... CAST(strftime('%m'...`
+   - Oorzaak: Dashboard queries gebruikten SQLite `strftime()` functie op MySQL database
+   - Impact: Dashboard crashes bij laden
+   - Fix: Alle `CAST(strftime('%m', invoice_date) AS INTEGER)` vervangen door `MONTH(invoice_date)`
+   - Files: `app/Http/Controllers/DashboardController.php` (5 occurrences, 3 methods)
+   - Methodes: `getMonthlyRevenue()`, `getMonthlyIncomeVsExpenses()`, `getMonthlyProfit()`
+   - Commit: "fix: Replace SQLite strftime with MySQL MONTH() in dashboard queries"
+   - Deployed: git pull + cache clear op server
+
+**Deployment Checklist:**
+- ✅ 14 Database migrations uitgevoerd
+- ✅ Admin user aangemaakt (havun22@gmail.com / 9TD@GYB6!J@rvMkC*tmZ)
+- ✅ Composer dependencies installed (Laravel 12, Mollie, etc.)
+- ✅ NPM assets gebuild (Vite, Chart.js, Tailwind)
+- ✅ Permissions: www-data:www-data, 775 op storage/
+- ✅ Apache VirtualHost configuratie
+- ✅ SSL certificaat geïnstalleerd en verified
+- ✅ DNS propagated (staging.admin.havun.nl → 46.224.31.30)
+- ✅ Dashboard SQL fix deployed
+
+**Current Status:**
+- Applicatie: ✅ LIVE op https://staging.admin.havun.nl
+- Login: ✅ Werkend
+- Dashboard: ✅ Werkend (na SQL fix)
+- Database: ✅ 14 tabellen, all migrations successful
+- SSL: ✅ Valid tot 2026-01-25
+
+**Nog Te Configureren:**
+- ⚠️ Remote database access naar Herdenkingsportaal (188.245.159.115)
+- ⚠️ Bunq API credentials
+- ⚠️ Gmail OAuth testing
+- ⚠️ Cron jobs voor automatische sync
+
+**Lessons Learned:**
+1. **Altijd server keuze afstemmen met gebruiker** - Niet automatisch aannemen
+2. **SQLite development ≠ MySQL production** - Date functions zijn verschillend
+3. **Test dashboard na deployment** - Database syntax verschillen kunnen crashes veroorzaken
+4. **Git pull is atomic deployment** - Nooit SCP/RSYNC gebruiken
+5. **PHP-FPM restart vereist** - Na code changes altijd PHP-FPM restarten
+
+---
+
 ## Contact & Support
 
 - **Email**: havun22@gmail.com
 - **Documentatie**: Alle MD bestanden in root
 - **API Credentials**: Zie BUSINESS-INFO.md (veilig bewaren!)
+- **Server Access**: Zie STAGING-INFO.md voor SSH credentials en toegang

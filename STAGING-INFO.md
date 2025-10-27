@@ -1,13 +1,14 @@
 # HavunAdmin Staging Environment
 
-**Status**: ✅ LIVE
-**Datum**: 27 Oktober 2025
+**Status**: ✅ LIVE & OPERATIONEEL
+**Deployment Datum**: 28 Oktober 2025
+**Laatste Update**: 28 Oktober 2025
 
 ---
 
 ## Server Informatie
 
-**Hetzner Server:**
+**Dedicated Havun Server (Hetzner):**
 - Type: CPX22 (2 vCPU, 4 GB RAM, 80 GB SSD)
 - IP: `46.224.31.30`
 - Hostname: `havun-server`
@@ -19,6 +20,11 @@
 - Backups: €1,45/maand
 - **Totaal**: €8,70/maand
 
+**Waarom dedicated server:**
+- Gescheiden van Herdenkingsportaal productie
+- Voor alle Havun business tools
+- Schaalbaarheid voor toekomstige apps
+
 ---
 
 ## Toegang
@@ -28,24 +34,29 @@
 ssh root@46.224.31.30
 ```
 
-**URL:**
+**Applicatie URL:**
 - https://staging.admin.havun.nl
+
+**Admin Login:**
+- Email: havun22@gmail.com
+- Password: 9TD@GYB6!J@rvMkC*tmZ
 
 **Database:**
 - Host: 127.0.0.1 (localhost)
 - Database: `havunadmin_staging`
 - User: `root`
 - Password: `7Ut0xaLzh7s^T2!DmQKR`
+- Port: 3306
 
 ---
 
 ## Stack
 
-- **Webserver**: Apache 2.4
-- **PHP**: 8.2
+- **Webserver**: Apache 2.4.58
+- **PHP**: 8.2 (PHP-FPM)
 - **Database**: MySQL 8.0
-- **Framework**: Laravel 11
-- **SSL**: Let's Encrypt (auto-renew)
+- **Framework**: Laravel 12.x
+- **SSL**: Let's Encrypt (geldig tot: 2026-01-25, auto-renew enabled)
 
 ---
 
@@ -116,10 +127,16 @@ tail -f /var/log/apache2/staging-access.log
 - Redirect URI: `https://staging.admin.havun.nl/gmail/callback`
 
 **Mollie API:**
-- Key: `live_aKqTeMsaKJWzzwq9C4aRgBqFcVZLf8` (staging key)
+- Key: `live_aKqTeJbFeuzARSeapNE3A2Tc8B2V3S` (staging key)
+- Status: ✅ Geconfigureerd in .env
 
 **Bunq API:**
-- Status: Nog te configureren
+- Status: ⏳ Nog te configureren (wacht op deployment completion)
+
+**Herdenkingsportaal Database (Remote):**
+- Host: 188.245.159.115 (Herdenkingsportaal server)
+- Status: ⚠️ Nog te configureren (remote read-only access)
+- Vereist: Firewall regel + remote MySQL user
 
 ---
 
@@ -129,18 +146,71 @@ tail -f /var/log/apache2/staging-access.log
 ```
 A    staging.admin.havun.nl    46.224.31.30
 A    admin.havun.nl            46.224.31.30
-A    *.havun.nl                46.224.31.30
 ```
+
+**Status**: ✅ DNS geconfigureerd en propagated
+
+---
+
+## Deployment Status
+
+**Voltooid:**
+- ✅ Server opgezet en geconfigureerd
+- ✅ LAMP stack geïnstalleerd (Apache, MySQL, PHP 8.2)
+- ✅ Laravel applicatie deployed
+- ✅ Database migrations (14 tabellen)
+- ✅ SSL certificaat geïnstalleerd
+- ✅ Admin user aangemaakt
+- ✅ PHP-FPM configuratie
+- ✅ Apache VirtualHost setup
+- ✅ Permissions correct ingesteld
+- ✅ Dashboard SQL fix (SQLite → MySQL conversie)
+- ✅ Composer dependencies installed
+- ✅ NPM assets gebuild
+
+**Nog Te Doen:**
+- [ ] Herdenkingsportaal remote database access configureren
+- [ ] Gmail OAuth flow testen
+- [ ] Duplicate matching functionaliteit testen
+- [ ] Reconciliation dashboard testen
+- [ ] Bunq API configureren
+- [ ] Deploy naar production (admin.havun.nl)
+
+---
+
+## Belangrijke Fixes
+
+**SQL Syntax Fix (28 Okt 2025):**
+- **Probleem**: Dashboard gebruikte SQLite `strftime()` functie op MySQL database
+- **Fout**: `SQLSTATE[42000]: Syntax error... near 'INTEGER)'`
+- **Oplossing**: Alle `CAST(strftime('%m', invoice_date) AS INTEGER)` vervangen door `MONTH(invoice_date)`
+- **Files gewijzigd**: `app/Http/Controllers/DashboardController.php`
+- **Methodes**: `getMonthlyRevenue()`, `getMonthlyIncomeVsExpenses()`, `getMonthlyProfit()`
+- **Status**: ✅ Gefixt en gedeployed
 
 ---
 
 ## Volgende Stappen
 
-- [ ] Test Gmail OAuth flow
-- [ ] Test duplicate matching functionaliteit
-- [ ] Test reconciliation dashboard
-- [ ] Deploy naar production (admin.havun.nl)
+**Korte termijn (deze week):**
+1. Test alle dashboard charts en grafieken
+2. Test invoice/expense CRUD functionaliteit
+3. Configureer Herdenkingsportaal remote database access
+4. Test Gmail OAuth flow en factuur import
+
+**Middellange termijn (volgende week):**
+1. Configureer Bunq API (LET OP: 3-uurs regel!)
+2. Test complete sync flow (Herdenkingsportaal → Gmail → Mollie → Bunq)
+3. Test duplicate matching en reconciliation
+4. Production deployment voorbereiden
+
+**Lange termijn:**
+1. Deploy naar production (admin.havun.nl)
+2. Monitoring en logging setup
+3. Backup strategie implementeren
+4. Cron jobs voor automatische sync
 
 ---
 
-**Laatst bijgewerkt**: 27 Oktober 2025
+**Laatst bijgewerkt**: 28 Oktober 2025
+**Deploy Geschiedenis**: Zie DEPLOYMENT.md voor volledige deployment guide

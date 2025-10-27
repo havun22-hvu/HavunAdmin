@@ -1,59 +1,361 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# HavunAdmin - Bedrijfsadministratie Systeem
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Status**: ✅ STAGING LIVE | **Laatst bijgewerkt**: 28 Oktober 2025
 
-## About Laravel
+**Live URL**: https://staging.admin.havun.nl
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Professioneel bedrijfsadministratie systeem voor Havun, gebouwd met Laravel 12. Automatiseert belastingaangifte, factuur import, en financiële rapportage.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🎯 Doel
 
-## Learning Laravel
+Een all-in-one administratie platform dat:
+- ✅ Facturen importeert uit meerdere bronnen (Herdenkingsportaal, Gmail, Mollie, Bunq)
+- ✅ Duplicate detection met memorial reference matching
+- ✅ Kwartaal/jaar rapportages genereert voor de Belastingdienst
+- ✅ Projecten en categorieën beheert
+- ✅ Dashboard met financiële statistieken en grafieken
+- ✅ 7 jaar bewaarplicht ondersteunt
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Deployment Status
 
-## Laravel Sponsors
+### Staging Environment ✅ LIVE
+- **URL**: https://staging.admin.havun.nl
+- **Server**: Hetzner CPX22 (46.224.31.30)
+- **Stack**: Laravel 12 + Apache + PHP 8.2-FPM + MySQL 8.0
+- **SSL**: Let's Encrypt (geldig tot 2026-01-25)
+- **Database**: 14 tabellen, all migrations completed
+- **Status**: Fully operational, ready for testing
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Production Environment ⏳ Nog Te Deployen
+- **URL**: admin.havun.nl (gepland)
+- **Status**: Wacht op staging testing completion
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 📁 Project Structuur
 
-## Contributing
+```
+HavunAdmin/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── DashboardController.php      # Dashboard met 6 charts
+│   │   ├── InvoiceController.php        # Factuur management
+│   │   ├── ProjectController.php        # Project management
+│   │   ├── CategoryController.php       # Categorie management
+│   │   ├── ReportController.php         # Tax exports (CSV)
+│   │   ├── SyncController.php           # Gmail/Mollie sync
+│   │   └── ReconciliationController.php # Duplicate matching UI
+│   ├── Models/
+│   │   ├── Invoice.php                  # Core model met scopes
+│   │   ├── Project.php
+│   │   ├── Customer.php
+│   │   ├── Supplier.php
+│   │   └── Category.php
+│   └── Services/
+│       ├── GmailService.php             # Gmail API integration
+│       ├── MollieService.php            # Mollie API integration
+│       ├── TransactionMatchingService.php # Duplicate detection
+│       └── TaxExportService.php         # Belastingdienst exports
+├── database/
+│   ├── migrations/                      # 14 migrations
+│   └── seeders/                         # User, Projects, Categories
+├── resources/views/
+│   ├── dashboard.blade.php              # Main dashboard (Chart.js)
+│   ├── invoices/                        # Invoice CRUD
+│   ├── reports/                         # Tax export forms
+│   └── reconciliation/                  # Duplicate matching UI
+└── docs/
+    ├── PROJECT-STATUS.md                # Complete project status
+    ├── STAGING-INFO.md                  # Staging server info + credentials
+    ├── DEPLOYMENT.md                    # Deployment guide
+    ├── BUSINESS-INFO.md                 # KvK, BTW, API keys
+    └── DATABASE-DESIGN.md               # Complete schema documentation
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🛠️ Tech Stack
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| **Framework** | Laravel | 12.x |
+| **Language** | PHP | 8.2 |
+| **Database** | MySQL | 8.0 |
+| **Webserver** | Apache | 2.4.58 |
+| **Process Manager** | PHP-FPM | 8.2 |
+| **Frontend** | Blade + Tailwind CSS + Alpine.js | - |
+| **Charts** | Chart.js | 4.x |
+| **Build Tool** | Vite | 7.x |
+| **Package Manager** | Composer + NPM | 2.x / 10.x |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📊 Features
 
-## License
+### ✅ Implemented
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Core Functionaliteit
+- ✅ **Dashboard** - 6 interactive charts (revenue, expenses, profit, YoY)
+- ✅ **Invoice Management** - CRUD voor inkomsten en uitgaven
+- ✅ **Project Management** - Koppel facturen aan projecten
+- ✅ **Category Management** - Categoriseer uitgaven
+- ✅ **Customer/Supplier Management** - Contact beheer
+
+#### Sync & Import
+- ✅ **Gmail API Integration** - OAuth2 authenticated
+- ✅ **Mollie API Integration** - Payment sync
+- ✅ **Transaction Matching** - Duplicate detection algoritme
+- ✅ **Memorial Reference Tracking** - Link naar Herdenkingsportaal monuments
+- ✅ **Reconciliation Dashboard** - UI voor duplicate review
+
+#### Belastingdienst Export
+- ✅ **Kwartaaloverzicht** - CSV export per kwartaal
+- ✅ **Jaaroverzicht** - CSV export per jaar
+- ✅ **BTW Aangifte** - CSV voor BTW aangifte (wanneer nodig)
+
+### 🔜 Nog Te Implementeren
+
+- [ ] **Bunq API Integration** - Bank transaction sync (wacht op deployment)
+- [ ] **Herdenkingsportaal Database Sync** - Remote readonly access (nog te configureren)
+- [ ] **PDF Export** - Facturen als PDF
+- [ ] **Automatische Categorisering** - AI-powered expense categorization
+- [ ] **Cron Jobs** - Automatische daily sync
+- [ ] **Email Notifications** - Alerts voor belangrijke events
+
+---
+
+## 🔑 Access & Credentials
+
+**Staging Environment:**
+- **URL**: https://staging.admin.havun.nl
+- **Admin Email**: havun22@gmail.com
+- **Admin Password**: 9TD@GYB6!J@rvMkC*tmZ
+
+**SSH Access:**
+```bash
+ssh root@46.224.31.30
+cd /var/www/staging
+```
+
+**Database:**
+- Host: localhost
+- Database: havunadmin_staging
+- User: root
+- Password: 7Ut0xaLzh7s^T2!DmQKR
+
+⚠️ **BELANGRIJK**: Credentials zijn gedocumenteerd in [STAGING-INFO.md](STAGING-INFO.md) en [BUSINESS-INFO.md](BUSINESS-INFO.md)
+
+---
+
+## 🚀 Quick Start (Local Development)
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/havun22-hvu/HavunAdmin.git
+cd HavunAdmin
+```
+
+### 2. Install Dependencies
+
+```bash
+composer install
+npm install
+```
+
+### 3. Environment Setup
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Update `.env` met je database credentials en API keys (zie BUSINESS-INFO.md).
+
+### 4. Database Setup
+
+```bash
+php artisan migrate
+php artisan db:seed
+```
+
+### 5. Build Assets
+
+```bash
+npm run dev
+```
+
+### 6. Start Development Server
+
+```bash
+php artisan serve
+```
+
+Open http://localhost:8000 in je browser.
+
+---
+
+## 📚 Documentatie
+
+| Bestand | Beschrijving |
+|---------|--------------|
+| [PROJECT-STATUS.md](PROJECT-STATUS.md) | Complete project status, deployment history, lessons learned |
+| [STAGING-INFO.md](STAGING-INFO.md) | Staging server info, credentials, deployment checklist |
+| [DEPLOYMENT.md](DEPLOYMENT.md) | Complete deployment guide voor staging + production |
+| [BUSINESS-INFO.md](BUSINESS-INFO.md) | KvK, BTW-id, API credentials, kosten overzicht |
+| [DATABASE-DESIGN.md](DATABASE-DESIGN.md) | Complete database schema (11 tabellen) |
+| [FUNCTIONAL-REQUIREMENTS.md](FUNCTIONAL-REQUIREMENTS.md) | Feature lijst en requirements |
+| [TECHNICAL-ARCHITECTURE.md](TECHNICAL-ARCHITECTURE.md) | Technische architectuur en design decisions |
+| [API-SETUP-GUIDE.md](API-SETUP-GUIDE.md) | Stapsgewijze API setup (Gmail, Mollie, Bunq) |
+| [TAX-REQUIREMENTS.md](TAX-REQUIREMENTS.md) | Nederlandse belasting eisen en verplichtingen |
+
+---
+
+## 🔥 Recent Updates
+
+### 28 Oktober 2025 - Staging Deployment COMPLEET ✅
+
+**Deployment Highlights:**
+- ✅ Dedicated Hetzner server opgezet (46.224.31.30)
+- ✅ LAMP stack geconfigureerd (Apache + PHP-FPM + MySQL)
+- ✅ SSL certificaat geïnstalleerd (Let's Encrypt)
+- ✅ 14 database migrations uitgevoerd
+- ✅ Admin user aangemaakt
+- ✅ Dashboard SQL fix (SQLite → MySQL conversie)
+- ✅ Alle dependencies geïnstalleerd en assets gebuild
+
+**Critical Fix:**
+- **SQL Syntax Error**: Dashboard gebruikte SQLite `strftime()` functie op MySQL database
+- **Oplossing**: Alle date queries geconverteerd naar MySQL `MONTH()` functie
+- **Impact**: Dashboard crashes opgelost, alle 6 charts werken nu
+
+**Lessons Learned:**
+1. Altijd server keuze afstemmen met gebruiker
+2. SQLite development ≠ MySQL production (date functions verschillen!)
+3. Test dashboard na deployment op productie database
+4. PHP-FPM restart vereist na code changes
+
+Zie [PROJECT-STATUS.md](PROJECT-STATUS.md) voor complete deployment history.
+
+---
+
+## 🔧 Deployment
+
+### Staging Deployment (Manual)
+
+```bash
+# SSH naar server
+ssh root@46.224.31.30
+
+# Navigeer naar project
+cd /var/www/staging
+
+# Pull laatste changes
+git pull origin main
+
+# Update dependencies (indien nodig)
+composer install --no-dev --optimize-autoloader
+
+# Run migrations (indien nieuwe migrations)
+php artisan migrate --force
+
+# Clear caches
+php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
+
+# Fix permissions
+chown -R www-data:www-data storage bootstrap/cache
+
+# Restart PHP-FPM
+systemctl restart php8.2-fpm
+```
+
+⚠️ **BELANGRIJK**: Gebruik ALTIJD `git pull` voor deployment, NOOIT `scp` of `rsync`! Zie [DEPLOYMENT-PROTOCOL.md](DEPLOYMENT-PROTOCOL.md) voor details.
+
+---
+
+## 🛡️ Security
+
+- ✅ SSL/TLS encryption (Let's Encrypt)
+- ✅ Environment variables voor sensitive data (.env NEVER in git)
+- ✅ OAuth2 voor API authenticatie (Gmail)
+- ✅ Laravel Breeze authenticatie
+- ✅ CSRF protection
+- ✅ SQL injection prevention (Eloquent ORM)
+- ✅ XSS protection (Blade escaping)
+
+---
+
+## 📊 Database Schema
+
+11 tabellen, volledige documentatie in [DATABASE-DESIGN.md](DATABASE-DESIGN.md):
+
+| Tabel | Doel | Records (staging) |
+|-------|------|-------------------|
+| users | Admin users | 1 |
+| projects | Projecten (Herdenkingsportaal, IDSee, etc) | 4 |
+| categories | Uitgaven categorieën | 6 |
+| customers | Klanten | 0 |
+| suppliers | Leveranciers | 0 |
+| invoices | Facturen (income + expense) | 0 |
+| invoice_items | Factuurregels | 0 |
+| transactions | Bank transacties | 0 |
+| api_syncs | Sync logs | 0 |
+| oauth_tokens | OAuth tokens (Gmail) | 0 |
+| settings | App settings | 0 |
+
+---
+
+## 🔗 API Integraties
+
+| API | Status | Gebruik |
+|-----|--------|---------|
+| **Gmail API** | ✅ Configured | Factuur PDF's importeren van leveranciers |
+| **Mollie API** | ✅ Configured | Klant betalingen synchroniseren |
+| **Bunq API** | ⏳ Pending | Bank transacties synchroniseren |
+| **Herdenkingsportaal DB** | ⏳ Pending | Factuur kopieën remote ophalen |
+
+---
+
+## 💰 Kosten
+
+**Maandelijks:**
+- Hetzner HavunAdmin server: €8,70/maand
+- Bunq abonnement: €13,99/maand
+- Claude AI development: €108,90/maand
+- **Totaal**: ~€137,60/maand
+
+**Jaarlijks:**
+- Domain registraties: €12,08/jaar
+- **Totaal**: ~€1.651,20/jaar
+
+Zie [BUSINESS-INFO.md](BUSINESS-INFO.md) voor complete kosten overzicht.
+
+---
+
+## 🤝 Contributing
+
+Dit is een private project voor Havun business administratie.
+
+---
+
+## 📞 Support
+
+- **Email**: havun22@gmail.com
+- **GitHub Issues**: https://github.com/havun22-hvu/HavunAdmin/issues
+- **Documentatie**: Zie MD files in root directory
+
+---
+
+## 📝 License
+
+Private - Havun © 2025
+
+---
+
+**Built with ❤️ using Laravel 12 and Claude Code**
