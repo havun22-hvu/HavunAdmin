@@ -24,8 +24,14 @@
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                         Projecten
                     </x-nav-link>
+                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                        Rapportages
+                    </x-nav-link>
                     <x-nav-link :href="route('sync.index')" :active="request()->routeIs('sync.*')">
                         Sync
+                    </x-nav-link>
+                    <x-nav-link :href="route('reconciliation.index')" :active="request()->routeIs('reconciliation.*')">
+                        Reconciliatie
                     </x-nav-link>
                 </div>
             </div>
@@ -91,8 +97,14 @@
             <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')">
                 Projecten
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                Rapportages
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('sync.index')" :active="request()->routeIs('sync.*')">
                 Sync
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('reconciliation.index')" :active="request()->routeIs('reconciliation.*')">
+                Reconciliatie
             </x-responsive-nav-link>
         </div>
 

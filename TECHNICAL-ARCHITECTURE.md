@@ -395,6 +395,7 @@ havunadmin/
 │   │   ├── GmailService.php
 │   │   ├── MollieService.php
 │   │   ├── BunqService.php
+│   │   ├── TaxExportService.php    # ✅ IMPLEMENTED (27 okt 2025)
 │   │   ├── ExportService.php
 │   │   └── CategoryService.php
 │   └── Jobs/                  # Queue jobs
@@ -410,7 +411,9 @@ havunadmin/
 │   │   ├── invoices/
 │   │   ├── expenses/
 │   │   ├── projects/
-│   │   └── reports/
+│   │   ├── reports/             # ✅ IMPLEMENTED (27 okt 2025)
+│   │   │   └── index.blade.php  # Tax export dashboard
+│   │   └── sync/
 │   ├── css/
 │   └── js/
 ├── routes/
@@ -418,13 +421,199 @@ havunadmin/
 │   └── api.php
 ├── storage/
 │   ├── app/
-│   │   └── invoices/          # PDF storage
+│   │   ├── invoices/          # PDF storage
+│   │   └── exports/           # Tax export files (CSV) ✅ IMPLEMENTED
 │   └── logs/
 ├── tests/
 ├── .env.example
 ├── composer.json
 └── package.json
 ```
+
+## Tax Export Service ✅ IMPLEMENTED (27 oktober 2025)
+
+### Purpose
+De TaxExportService verzorgt de automatische generatie van belastingrapporten voor de Belastingdienst. Het systeem exporteert inkomsten en uitgaven naar Excel-compatible CSV bestanden, specifiek geoptimaliseerd voor Nederlandse administratie eisen.
+
+### Service Location
+**File**: `app/Services/TaxExportService.php`
+
+### Export Methods
+
+#### 1. exportQuarterlyReport(int $year, int $quarter): string
+**Doel**: Kwartaaloverzicht voor omzetbelasting aangifte
+
+**Parameters**:
+- `$year`: Jaar (bijv. 2025)
+- `$quarter`: Kwartaal (1-4)
+
+**Output**: `storage/app/exports/belastingdienst_Q{quarter}_{year}.csv`
+
+**Inhoud**:
+- Bedrijfsgegevens (KvK, BTW-id, adres)
+- Samenvatting (totale omzet, uitgaven, winst)
+- Omzet per project breakdown
+- Uitgaven per categorie breakdown
+- Volledige inkomsten lijst met details
+- Volledige uitgaven lijst met details
+
+**Gebruik**:
+```php
+$taxService = new TaxExportService();
+$filePath = $taxService->exportQuarterlyReport(2025, 1); // Q1 2025
+```
+
+#### 2. exportYearlyReport(int $year): string
+**Doel**: Jaaroverzicht voor inkomstenbelasting aangifte
+
+**Parameters**:
+- `$year`: Jaar (bijv. 2025)
+
+**Output**: `storage/app/exports/belastingdienst_jaaroverzicht_{year}.csv`
+
+**Inhoud**:
+- Bedrijfsgegevens
+- Jaarlijkse totalen (omzet, uitgaven, winst)
+- Per kwartaal breakdown (Q1-Q4)
+- Omzet per project (heel jaar)
+- Uitgaven per categorie (heel jaar)
+- Alle inkomsten gedetailleerd
+- Alle uitgaven gedetailleerd
+
+**Gebruik**:
+```php
+$taxService = new TaxExportService();
+$filePath = $taxService->exportYearlyReport(2025);
+```
+
+#### 3. exportBTWReport(int $year, int $quarter): string
+**Doel**: BTW aangifte (voor wanneer BTW-plichtig wordt)
+
+**Parameters**:
+- `$year`: Jaar
+- `$quarter`: Kwartaal (1-4)
+
+**Output**: `storage/app/exports/btw_aangifte_Q{quarter}_{year}.csv`
+
+**Inhoud**:
+- Bedrijfsgegevens
+- BTW Berekening:
+  - Verschuldigde BTW op omzet (21%)
+  - Voorbelasting op kosten (terugvorderbaar)
+  - Netto te betalen BTW aan Belastingdienst
+- Inkomsten met BTW details
+- Uitgaven met BTW details
+
+**Gebruik**:
+```php
+$taxService = new TaxExportService();
+$filePath = $taxService->exportBTWReport(2025, 1);
+```
+
+### Technical Details
+
+**CSV Format**:
+- UTF-8 encoding met BOM (Byte Order Mark)
+- Semicolon (;) separator voor Nederlandse Excel compatibiliteit
+- Double quotes voor text fields
+- Date format: dd-mm-yyyy (Nederlands formaat)
+- Number format: €1.234,56 (Nederlands formaat)
+
+**Database Queries**:
+- Gebruikt Invoice model met `type` filter ('income' of 'expense')
+- Alleen 'paid' status facturen worden geëxporteerd
+- Eager loading van relaties (project, customer, supplier, category)
+- Date range filtering met whereBetween
+
+**File Storage**:
+- Directory: `storage/app/exports/`
+- Auto-create directory als niet bestaat
+- Permissions: 0755
+- Bestanden blijven bewaard (7 jaar bewaarplicht)
+
+### Controller Integration
+
+**File**: `app/Http/Controllers/ReportController.php`
+
+**Routes**:
+```php
+GET  /reports                      // Reports dashboard
+POST /reports/quarterly            // Generate quarterly report
+POST /reports/yearly               // Generate yearly report
+POST /reports/btw                  // Generate BTW report
+GET  /reports/download/{filename}  // Download export file
+DELETE /reports/{filename}         // Delete export file
+```
+
+**Methods**:
+- `index()` - Toon rapportages dashboard met formulieren
+- `exportQuarterly()` - Genereer kwartaalrapport en download
+- `exportYearly()` - Genereer jaarrapport en download
+- `exportBTW()` - Genereer BTW rapport en download
+- `download()` - Download eerder gegenereerd export bestand
+- `delete()` - Verwijder oud export bestand
+
+### View Integration
+
+**File**: `resources/views/reports/index.blade.php`
+
+**Features**:
+- Drie export cards (Kwartaal, Jaaroverzicht, BTW)
+- Year en quarter dropdown selectors
+- Automatische default naar huidig jaar/kwartaal
+- Lijst van eerder gegenereerde exports
+- Download en delete knoppen per export
+- File size en creation date weergave
+- Informatieblok met uitleg over elk export type
+- Success/error message handling
+
+**Navigation**:
+- Menu item "Rapportages" toegevoegd
+- Desktop en mobile responsive
+- Active state highlighting
+
+### Helper Methods
+
+```php
+// In TaxExportService.php
+
+private function getQuarterStartDate(int $year, int $quarter): string
+// Returns: "YYYY-MM-DD" voor start van kwartaal
+
+private function getQuarterEndDate(int $year, int $quarter): string
+// Returns: "YYYY-MM-DD" voor einde van kwartaal
+```
+
+### Usage Flow
+
+```
+User navigeert naar /reports
+    ↓
+Selecteert jaar en kwartaal/periode
+    ↓
+Klikt op "Exporteer" knop
+    ↓
+POST request naar /reports/{type}
+    ↓
+ReportController roept TaxExportService aan
+    ↓
+Service haalt data op uit database
+    ↓
+Service genereert CSV bestand
+    ↓
+Bestand opgeslagen in storage/app/exports/
+    ↓
+Browser download response
+    ↓
+Bestand blijft beschikbaar in exports lijst
+```
+
+### Future Enhancements
+- PDF export naast CSV
+- Email delivery van exports naar accountant
+- Scheduled automatic exports (einde kwartaal/jaar)
+- Export naar Belastingdienst format (specifieke XSD/XML schema)
+- Integration met Mijn Belastingdienst
 
 ## API Integration Architecture
 

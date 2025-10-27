@@ -171,29 +171,47 @@
 
 ### 5. Export & Rapportage
 
-#### "1-Klik" Export voor Belastingaangifte
+#### "1-Klik" Export voor Belastingaangifte ✅ GEÏMPLEMENTEERD (27 oktober 2025)
 
-##### Kwartaaloverzicht
-- **Knop**: "Export Kwartaal Q[1-4] [Jaar]"
-- **Output**: Excel + PDF
+##### Kwartaaloverzicht ✅
+**Status**: Volledig geïmplementeerd
+- **Locatie**: /reports (Rapportages menu)
+- **Knop**: "Exporteer Kwartaal" met jaar/kwartaal dropdown
+- **Output**: CSV (Excel-compatible met UTF-8 BOM + semicolon separator)
+- **Bestand**: `belastingdienst_Q[1-4]_[jaar].csv`
 - **Inhoud**:
-  - Totale omzet per project
-  - Totale omzet dit kwartaal
-  - Lijst van alle facturen (detail)
-  - Tabel met: datum, factuurnr, klant, project, bedrag
+  - Bedrijfsgegevens header (KvK, BTW-id, adres)
+  - Samenvatting sectie met:
+    - Totale omzet dit kwartaal
+    - Totale uitgaven dit kwartaal
+    - Winst (omzet - kosten)
+  - Omzet per project breakdown
+  - Uitgaven per categorie breakdown
+  - Volledige inkomsten lijst (factuurnummer, datum, klant, project, bedragen)
+  - Volledige uitgaven lijst (factuurnummer, datum, leverancier, categorie, bedragen)
+- **Technisch**: `TaxExportService::exportQuarterlyReport()`
 
-##### Jaaroverzicht
-- **Knop**: "Export Jaaroverzicht [Jaar]"
-- **Output**: Excel + PDF
+##### Jaaroverzicht ✅
+**Status**: Volledig geïmplementeerd
+- **Locatie**: /reports (Rapportages menu)
+- **Knop**: "Exporteer Jaaroverzicht" met jaar dropdown
+- **Output**: CSV (Excel-compatible)
+- **Bestand**: `belastingdienst_jaaroverzicht_[jaar].csv`
 - **Inhoud**:
-  - Totale omzet per project per kwartaal
-  - Totale omzet jaar
-  - Alle kosten per categorie
-  - Winst (omzet - kosten)
-  - Lijst van alle facturen IN (detail)
-  - Lijst van alle uitgaven UIT (detail)
+  - Bedrijfsgegevens header
+  - Jaarlijkse samenvatting met:
+    - Totale omzet hele jaar
+    - Totale uitgaven hele jaar
+    - Netto winst (omzet - kosten)
+  - Per kwartaal breakdown (Q1, Q2, Q3, Q4)
+  - Omzet per project (heel jaar)
+  - Uitgaven per categorie (heel jaar)
+  - Alle inkomsten gedetailleerd (project, klant, bedragen, betaaldatum)
+  - Alle uitgaven gedetailleerd (categorie, leverancier, bedragen, betaaldatum)
+- **Technisch**: `TaxExportService::exportYearlyReport()`
 
-##### Transactie Export
+##### Transactie Export ⏳
+**Status**: Nog te implementeren
 - **Knop**: "Export Alle Transacties"
 - **Output**: Excel/CSV
 - **Inhoud**:
@@ -202,12 +220,32 @@
   - Alle handmatige facturen
   - Met: datum, type, bedrag, project, categorie, status
 
-##### BTW Aangifte (voor later)
-- Als BTW-plichtig wordt:
-  - BTW aangifte overzicht
-  - Omzetbelasting (btw op omzet)
-  - Voorbelasting (btw op kosten)
-  - Te betalen BTW
+##### BTW Aangifte ✅
+**Status**: Volledig geïmplementeerd (voor toekomstig gebruik)
+- **Locatie**: /reports (Rapportages menu)
+- **Knop**: "Exporteer BTW Aangifte" met jaar/kwartaal dropdown
+- **Output**: CSV (Excel-compatible)
+- **Bestand**: `btw_aangifte_Q[1-4]_[jaar].csv`
+- **Inhoud**:
+  - Bedrijfsgegevens header
+  - BTW Berekening sectie:
+    - Verschuldigde BTW op omzet (21%)
+    - Voorbelasting op kosten (terugvorderbaar)
+    - **Netto te betalen BTW** aan Belastingdienst
+  - Gedetailleerde inkomsten met BTW breakdown
+  - Gedetailleerde uitgaven met BTW breakdown
+- **Technisch**: `TaxExportService::exportBTWReport()`
+- **Note**: Klaar voor wanneer BTW-plichtig wordt (omzet > €20.000/jaar)
+
+##### Export Management ✅
+**Status**: Volledig geïmplementeerd
+- **Functionaliteit**:
+  - Overzicht van eerder gegenereerde exports
+  - Download functionaliteit voor oude exports
+  - Delete functionaliteit voor oude exports
+  - Bestandsgrootte en datum weergave
+  - Exports opgeslagen in `storage/app/exports/`
+- **Bewaarplicht**: Exports bewaren minimaal 7 jaar voor Belastingdienst
 
 #### Rapportages
 - **Omzet rapport**: per project, per periode

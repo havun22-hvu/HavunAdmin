@@ -1,10 +1,11 @@
 # Havun Admin - Project Status
 
-**Laatst bijgewerkt**: 27 oktober 2025 - 17:30
+**Laatst bijgewerkt**: 27 oktober 2025 - 22:45
 
 ## Huidige Fase
-🟢 **Phase 2 - API Integrations (In Progress)**
+🟢 **Phase 3 - Advanced Features (In Progress)**
 ✅ Phase 1 MVP Development - COMPLEET
+✅ Phase 2 API Integrations - Mollie COMPLEET
 
 ## Voortgang Overzicht
 
@@ -85,8 +86,21 @@
 - [ ] Bunq API integration (wacht op deployment)
 - [ ] Gmail API integration
 
-#### Development - Phase 3 Advanced Features
-- [ ] Export functionaliteit (Excel/PDF)
+#### Development - Phase 3 Advanced Features ✅ (27 okt 2025)
+- [x] Tax Export functionaliteit (Belastingdienst) ✅
+  - [x] TaxExportService (3 export methods) ✅
+  - [x] ReportController met export endpoints ✅
+  - [x] Reports view met export formulieren ✅
+  - [x] Kwartaaloverzicht export (CSV) ✅
+  - [x] Jaaroverzicht export (CSV) ✅
+  - [x] BTW aangifte export (CSV) ✅
+  - [x] Download functionaliteit voor exports ✅
+  - [x] Delete functionaliteit voor oude exports ✅
+  - [x] Navigation menu updated met Rapportages ✅
+  - [x] Routes toegevoegd voor alle exports ✅
+- [ ] PDF export functionaliteit (facturen)
+- [ ] Grafieken en visualisaties
+- [ ] Automatische categorisering van uitgaven
 
 #### Deployment
 - [ ] Hetzner server configureren
@@ -229,9 +243,10 @@
 - [ ] Mollie integration
 - [ ] Bunq integration (zodra app live is)
 
-### 5. Advanced Features (1-2 weken)
-- [ ] Kwartaal/jaar rapportages
-- [ ] PDF exports
+### 5. Advanced Features (1-2 weken) - ⚡ IN PROGRESS
+- [x] Kwartaal/jaar rapportages ✅ (27 oktober 2025)
+- [x] CSV exports voor Belastingdienst ✅ (27 oktober 2025)
+- [ ] PDF exports (facturen)
 - [ ] Grafieken
 - [ ] Automatische categorisering
 

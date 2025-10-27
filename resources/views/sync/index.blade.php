@@ -136,7 +136,7 @@
                 </div>
 
                 <!-- Gmail -->
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg opacity-50">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Gmail</h3>
@@ -152,7 +152,7 @@
                                     {{ $lastGmailSync->completed_at->format('d-m-Y H:i') }}
                                 </div>
                                 <div class="text-xs text-gray-500 dark:text-gray-400">
-                                    {{ $lastGmailSync->items_processed }} items verwerkt
+                                    {{ $lastGmailSync->records_found }} items gevonden
                                 </div>
                             @else
                                 <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
@@ -161,12 +161,31 @@
                             @endif
                         </div>
 
-                        <form action="{{ route('sync.gmail') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-gray-400 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest cursor-not-allowed" disabled>
-                                Binnenkort
-                            </button>
-                        </form>
+                        @php
+                            $gmailService = app(\App\Services\GmailService::class);
+                            $isAuthenticated = $gmailService->isAuthenticated();
+                        @endphp
+
+                        @if($isAuthenticated)
+                            <form action="{{ route('sync.gmail') }}" method="POST" class="space-y-2">
+                                @csrf
+                                <input type="hidden" name="type" value="expense">
+                                <button type="submit" class="w-full inline-flex justify-center items-center px-3 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700">
+                                    Scan Uitgaven
+                                </button>
+                            </form>
+                            <form action="{{ route('sync.gmail') }}" method="POST" class="mt-2">
+                                @csrf
+                                <input type="hidden" name="type" value="income">
+                                <button type="submit" class="w-full inline-flex justify-center items-center px-3 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700">
+                                    Scan Inkomsten
+                                </button>
+                            </form>
+                        @else
+                            <a href="{{ route('gmail.auth') }}" class="w-full inline-flex justify-center items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                                Gmail Koppelen
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

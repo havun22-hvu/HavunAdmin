@@ -627,49 +627,102 @@ protected function schedule(Schedule $schedule)
 - User experience enhancements
 - Mobile responsiveness
 
-### 3.1 Advanced Reporting
+### 3.1 Tax Export Functionality ✅ COMPLETED (27 oktober 2025)
 
-#### Install PDF Library
+#### Implementation Status: LIVE
+
+**What was built**:
+- ✅ TaxExportService met 3 export methods
+- ✅ ReportController met alle export endpoints
+- ✅ Reports UI met export formulieren
+- ✅ Navigation menu item "Rapportages"
+- ✅ CSV exports met Nederlandse formatting
+- ✅ Download en delete functionaliteit
+
+#### Export Types Implemented:
+
+**1. Kwartaaloverzicht (Quarterly Report)** ✅
+- **Route**: POST /reports/quarterly
+- **Output**: `belastingdienst_Q{1-4}_{year}.csv`
+- **Content**:
+  - Bedrijfsgegevens header
+  - Totale omzet en uitgaven per kwartaal
+  - Omzet per project breakdown
+  - Uitgaven per categorie breakdown
+  - Volledige inkomsten en uitgaven details
+- **Use Case**: Omzetbelasting aangifte
+
+**2. Jaaroverzicht (Yearly Report)** ✅
+- **Route**: POST /reports/yearly
+- **Output**: `belastingdienst_jaaroverzicht_{year}.csv`
+- **Content**:
+  - Jaarlijkse totalen
+  - Per kwartaal breakdown (Q1-Q4)
+  - Omzet per project (heel jaar)
+  - Uitgaven per categorie (heel jaar)
+  - Alle transacties gedetailleerd
+- **Use Case**: Inkomstenbelasting aangifte
+
+**3. BTW Aangifte (VAT Report)** ✅
+- **Route**: POST /reports/btw
+- **Output**: `btw_aangifte_Q{1-4}_{year}.csv`
+- **Content**:
+  - BTW berekeningen (verschuldigd vs voorbelasting)
+  - Netto te betalen BTW
+  - Gedetailleerde BTW breakdown
+- **Use Case**: BTW aangifte (wanneer BTW-plichtig)
+
+**Files Created**:
+- ✅ `app/Services/TaxExportService.php` - Core export logic
+- ✅ `app/Http/Controllers/ReportController.php` - Export endpoints
+- ✅ `resources/views/reports/index.blade.php` - Export UI
+- ✅ `routes/web.php` - 6 nieuwe routes toegevoegd
+- ✅ `resources/views/layouts/navigation.blade.php` - Menu updated
+
+**Technical Details**:
+- Native PHP CSV export (geen dependencies)
+- UTF-8 BOM voor Excel compatibiliteit
+- Semicolon separator (Nederlands Excel)
+- Date format: dd-mm-yyyy
+- Number format: €1.234,56
+- Storage: `storage/app/exports/`
+
+**Duration**: ✅ COMPLETED in 1 dag
+
+---
+
+### 3.2 Advanced Reporting (Future)
+
+#### Install PDF Library (Nog te doen)
 ```bash
 composer require barryvdh/laravel-dompdf
 ```
 
-#### Reports to create:
-1. **Quarterly Tax Report** (PDF + Excel)
-   - Total revenue by project
-   - Total expenses by category
-   - Profit calculation
-   - Formatted for tax filing
+#### Additional Reports to create:
+1. **PDF versions van tax exports** (Future enhancement)
+   - PDF naast CSV exports
+   - Formatted for printing
 
-2. **Yearly Overview** (PDF + Excel)
-   - Revenue per quarter
-   - Expenses per quarter
-   - Charts and graphs
-   - Summary for accountant
-
-3. **Project Profitability Report**
+2. **Project Profitability Report**
    - Revenue per project
    - Expenses per project
    - Profit per project
    - ROI calculation
 
-4. **Supplier Spending Report**
+3. **Supplier Spending Report**
    - Top suppliers by spending
    - Spending trends
    - Category breakdown
 
 **Files to create**:
-- `app/Services/ReportService.php`
-- `app/Exports/QuarterlyTaxReport.php` (Excel)
-- `app/Exports/YearlyOverviewReport.php` (Excel)
 - `resources/views/reports/quarterly-tax-pdf.blade.php` (PDF template)
 - `resources/views/reports/yearly-overview-pdf.blade.php`
 
-**Duration**: 3 days
+**Duration**: 2-3 days
 
 ---
 
-### 3.2 Advanced Charts & Visualizations
+### 3.3 Advanced Charts & Visualizations
 
 #### Charts to add:
 1. **Revenue Trends** (Line chart)
@@ -696,7 +749,7 @@ composer require barryvdh/laravel-dompdf
 
 ---
 
-### 3.3 Smart Categorization
+### 3.4 Smart Categorization
 
 #### Features:
 1. **Learning Algorithm**
@@ -721,7 +774,7 @@ composer require barryvdh/laravel-dompdf
 
 ---
 
-### 3.4 User Experience Improvements
+### 3.5 User Experience Improvements
 
 #### Enhancements:
 1. **Dashboard Widgets**
@@ -748,7 +801,7 @@ composer require barryvdh/laravel-dompdf
 
 ---
 
-### 3.5 Mobile Optimization
+### 3.6 Mobile Optimization
 
 #### Tasks:
 1. **Responsive Tables**
@@ -770,6 +823,12 @@ composer require barryvdh/laravel-dompdf
 
 ### Phase 3 Checklist
 
+- [x] **Tax Export Functionality** ✅ COMPLETED (27 oktober 2025)
+  - [x] TaxExportService (Quarterly, Yearly, BTW) ✅
+  - [x] ReportController met export endpoints ✅
+  - [x] Reports view met formulieren ✅
+  - [x] CSV export met Nederlandse formatting ✅
+  - [x] Navigation menu updated ✅
 - [ ] Advanced PDF reports
 - [ ] Excel reports with formatting
 - [ ] Additional charts (line, donut, area)
@@ -784,7 +843,7 @@ composer require barryvdh/laravel-dompdf
 - [ ] Cross-browser testing
 
 **Total Duration**: 2 weeks (part-time)
-**Status**: ⏳ Not started
+**Status**: ⚡ IN PROGRESS - Tax exports completed!
 
 ---
 

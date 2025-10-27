@@ -13,7 +13,14 @@
       "Bash(composer --version:*)",
       "Bash(dir)",
       "Bash(touch:*)",
-      "Bash(mysql:*)"
+      "Bash(mysql:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(composer show:*)",
+      "Bash(composer require:*)",
+      "Bash(dir:*)",
+      "Bash(del \"d:\\GitHub\\HavunAdmin\\database\\migrations\\2025_10_27_185510_create_oauth_tokens_table.php\")",
+      "Bash(sqlite3:*)"
     ],
     "deny": [],
     "ask": [],

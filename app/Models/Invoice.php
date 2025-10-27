@@ -33,9 +33,15 @@ class Invoice extends Model
         'reference',
         'file_path',
         'source',
+        'external_reference',
         'mollie_payment_id',
         'bunq_transaction_id',
         'gmail_message_id',
+        'memorial_reference',
+        'parent_invoice_id',
+        'is_duplicate',
+        'match_confidence',
+        'match_notes',
         'notes',
     ];
 
@@ -103,6 +109,22 @@ class Invoice extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Get the parent (master) invoice if this is a duplicate.
+     */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Invoice::class, 'parent_invoice_id');
+    }
+
+    /**
+     * Get all duplicate invoices if this is a master.
+     */
+    public function duplicates(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'parent_invoice_id');
     }
 
     /**

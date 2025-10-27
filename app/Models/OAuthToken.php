@@ -10,6 +10,8 @@ class OAuthToken extends Model
 {
     use HasFactory;
 
+    protected $table = 'oauth_tokens';
+
     protected $fillable = [
         'service',
         'access_token',

@@ -35,4 +35,19 @@ return [
         ],
     ],
 
+    'gmail' => [
+        'client_id' => env('GMAIL_CLIENT_ID'),
+        'client_secret' => env('GMAIL_CLIENT_SECRET'),
+        'redirect_uri' => env('GMAIL_REDIRECT_URI', env('APP_URL') . '/gmail/callback'),
+    ],
+
+    'mollie' => [
+        'key' => env('MOLLIE_API_KEY'),
+    ],
+
+    'bunq' => [
+        'api_key' => env('BUNQ_API_KEY'),
+        'account_id' => env('BUNQ_ACCOUNT_ID'),
+    ],
+
 ];

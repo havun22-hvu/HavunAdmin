@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ApiSync;
+use App\Services\GmailService;
 use App\Services\HerdenkingsportaalService;
 use App\Services\MollieService;
 use Illuminate\Http\Request;
@@ -100,11 +101,97 @@ class SyncController extends Controller
     }
 
     /**
-     * Sync Gmail invoices (placeholder for Phase 2)
+     * Gmail OAuth - Redirect to Google for authorization
      */
-    public function syncGmail()
+    public function gmailAuth(GmailService $gmailService)
     {
-        return redirect()->back()->with('info', 'Gmail integratie komt binnenkort!');
+        $authUrl = $gmailService->getAuthUrl();
+        return redirect($authUrl);
+    }
+
+    /**
+     * Gmail OAuth - Handle callback from Google
+     */
+    public function gmailCallback(Request $request, GmailService $gmailService)
+    {
+        try {
+            $code = $request->input('code');
+
+            if (!$code) {
+                return redirect()->route('sync.index')->with('error', 'Gmail authenticatie geannuleerd.');
+            }
+
+            $gmailService->handleCallback($code);
+
+            return redirect()->route('sync.index')->with('success', 'Gmail succesvol gekoppeld! Je kunt nu emails scannen.');
+        } catch (\Exception $e) {
+            return redirect()->route('sync.index')->with('error', 'Gmail authenticatie mislukt: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Sync Gmail invoices
+     */
+    public function syncGmail(Request $request, GmailService $gmailService)
+    {
+        try {
+            // Check if authenticated
+            if (!$gmailService->isAuthenticated()) {
+                return redirect()->back()->with('error', 'Gmail is nog niet gekoppeld. Klik eerst op "Gmail Koppelen".');
+            }
+
+            // Get type (expense or income)
+            $type = $request->input('type', 'expense');
+
+            // Get last sync date to only scan new emails (filtered by type)
+            $lastSyncDate = $gmailService->getLastSyncDate($type);
+
+            // Record sync start (we'll update status to success/failed later)
+            $sync = ApiSync::create([
+                'service' => 'gmail',
+                'type' => $type === 'income' ? 'invoices' : 'expenses',
+                'status' => 'partial', // Will be updated to 'success' or 'failed' later
+                'started_at' => now(),
+            ]);
+
+            // Scan for invoices
+            $invoices = $gmailService->scanForInvoices($lastSyncDate, $type);
+
+            // Update sync record
+            $sync->update([
+                'status' => 'success',
+                'completed_at' => now(),
+                'items_found' => count($invoices),
+                'items_processed' => count($invoices),
+                'items_created' => count($invoices),
+                'items_updated' => 0,
+                'items_failed' => 0,
+                'metadata' => ['invoices' => $invoices],
+            ]);
+
+            if (count($invoices) === 0) {
+                $typeLabel = $type === 'income' ? 'inkomsten' : 'uitgaven';
+                return redirect()->back()->with('info', "Geen nieuwe {$typeLabel} gevonden in Gmail.");
+            }
+
+            $typeLabel = $type === 'income' ? 'inkomsten' : 'uitgaven';
+            return redirect()->back()->with('success', sprintf(
+                'Gmail sync voltooid! %d nieuwe %s gevonden en als concept opgeslagen.',
+                count($invoices),
+                $typeLabel
+            ));
+        } catch (\Exception $e) {
+            // Update sync record with error
+            if (isset($sync)) {
+                $sync->update([
+                    'status' => 'failed',
+                    'completed_at' => now(),
+                    'error_message' => $e->getMessage(),
+                ]);
+            }
+
+            return redirect()->back()->with('error', 'Gmail sync mislukt: ' . $e->getMessage());
+        }
     }
 
     /**
