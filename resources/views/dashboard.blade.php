@@ -117,8 +117,51 @@
             </div>
             @endif
 
-            <!-- Charts Row -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Charts Section -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Grafieken & Analyses</h3>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Chart 1: Monthly Revenue (Bar) -->
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4">Omzet per Maand ({{ $currentYear }})</h4>
+                        <canvas id="monthlyRevenueChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Chart 2: Revenue by Project (Donut) -->
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4">Omzet per Project</h4>
+                        <canvas id="revenueByProjectChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Chart 3: Income vs Expenses (Line) -->
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4">Inkomsten vs Uitgaven</h4>
+                        <canvas id="incomeVsExpensesChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Chart 4: Expenses by Category (Pie) -->
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4">Kosten per Categorie</h4>
+                        <canvas id="expensesByCategoryChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Chart 5: Monthly Profit (Area) -->
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4">Maandelijkse Winst</h4>
+                        <canvas id="monthlyProfitChart" style="max-height: 300px;"></canvas>
+                    </div>
+
+                    <!-- Chart 6: Year-over-Year (Bar) -->
+                    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                        <h4 class="text-md font-semibold text-gray-900 dark:text-gray-100 mb-4">Jaar-over-Jaar Vergelijking</h4>
+                        <canvas id="yearOverYearChart" style="max-height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Old Charts Row (Remove or keep for reference) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6" style="display: none;">
                 <!-- Revenue by Project -->
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <h4 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Omzet per Project</h4>
@@ -247,4 +290,300 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const textColor = isDark ? '#E5E7EB' : '#374151';
+            const gridColor = isDark ? '#374151' : '#E5E7EB';
+
+            // Chart 1: Monthly Revenue (Bar Chart)
+            const monthlyRevenueCtx = document.getElementById('monthlyRevenueChart').getContext('2d');
+            new Chart(monthlyRevenueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Omzet',
+                        data: @json($monthlyRevenue),
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '€' + context.parsed.y.toLocaleString('nl-NL', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString('nl-NL');
+                                }
+                            },
+                            grid: { color: gridColor }
+                        },
+                        x: {
+                            ticks: { color: textColor },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+
+            // Chart 2: Revenue by Project (Donut Chart)
+            const revenueByProjectCtx = document.getElementById('revenueByProjectChart').getContext('2d');
+            const projectData = @json($revenueByProject);
+            new Chart(revenueByProjectCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: projectData.map(item => item.project),
+                    datasets: [{
+                        data: projectData.map(item => item.total),
+                        backgroundColor: projectData.map(item => item.color),
+                        borderWidth: 2,
+                        borderColor: isDark ? '#1F2937' : '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: textColor, padding: 15 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return context.label + ': €' + context.parsed.toLocaleString('nl-NL', {minimumFractionDigits: 2}) + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 3: Income vs Expenses (Line Chart)
+            const incomeVsExpensesCtx = document.getElementById('incomeVsExpensesChart').getContext('2d');
+            const incomeVsExpensesData = @json($monthlyIncomeVsExpenses);
+            new Chart(incomeVsExpensesCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: 'Inkomsten',
+                            data: incomeVsExpensesData.income,
+                            borderColor: 'rgba(34, 197, 94, 1)',
+                            backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 2
+                        },
+                        {
+                            label: 'Uitgaven',
+                            data: incomeVsExpensesData.expenses,
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            tension: 0.4,
+                            fill: false,
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { color: textColor }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': €' + context.parsed.y.toLocaleString('nl-NL', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString('nl-NL');
+                                }
+                            },
+                            grid: { color: gridColor }
+                        },
+                        x: {
+                            ticks: { color: textColor },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+
+            // Chart 4: Expenses by Category (Pie Chart)
+            const expensesByCategoryCtx = document.getElementById('expensesByCategoryChart').getContext('2d');
+            const categoryData = @json($expensesByCategory);
+            new Chart(expensesByCategoryCtx, {
+                type: 'pie',
+                data: {
+                    labels: categoryData.map(item => item.category),
+                    datasets: [{
+                        data: categoryData.map(item => item.total),
+                        backgroundColor: categoryData.map(item => item.color),
+                        borderWidth: 2,
+                        borderColor: isDark ? '#1F2937' : '#FFFFFF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: textColor, padding: 15 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
+                                    return context.label + ': €' + context.parsed.toLocaleString('nl-NL', {minimumFractionDigits: 2}) + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Chart 5: Monthly Profit (Area Chart)
+            const monthlyProfitCtx = document.getElementById('monthlyProfitChart').getContext('2d');
+            new Chart(monthlyProfitCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Winst',
+                        data: @json($monthlyProfit),
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.3)',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Winst: €' + context.parsed.y.toLocaleString('nl-NL', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString('nl-NL');
+                                }
+                            },
+                            grid: { color: gridColor }
+                        },
+                        x: {
+                            ticks: { color: textColor },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+
+            // Chart 6: Year-over-Year Comparison (Grouped Bar Chart)
+            const yearOverYearCtx = document.getElementById('yearOverYearChart').getContext('2d');
+            const yearOverYearData = @json($yearOverYear);
+            new Chart(yearOverYearCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [
+                        {
+                            label: yearOverYearData.currentYearLabel,
+                            data: yearOverYearData.currentYear,
+                            backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: yearOverYearData.previousYearLabel,
+                            data: yearOverYearData.previousYear,
+                            backgroundColor: 'rgba(156, 163, 175, 0.8)',
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: { color: textColor }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': €' + context.parsed.y.toLocaleString('nl-NL', {minimumFractionDigits: 2});
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: textColor,
+                                callback: function(value) {
+                                    return '€' + value.toLocaleString('nl-NL');
+                                }
+                            },
+                            grid: { color: gridColor }
+                        },
+                        x: {
+                            ticks: { color: textColor },
+                            grid: { color: gridColor }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+    @endpush
 </x-app-layout>

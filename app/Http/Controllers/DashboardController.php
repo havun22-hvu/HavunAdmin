@@ -110,6 +110,22 @@ class DashboardController extends Controller
         $overdueInvoicesCount = Invoice::income()->overdue()->count();
         $overdueInvoicesTotal = Invoice::income()->overdue()->sum('total');
 
+        // Chart 1: Monthly revenue (current year, per month)
+        $monthlyRevenue = $this->getMonthlyRevenue($currentYear);
+
+        // Chart 2: Revenue by project (already have: $revenueByProject)
+
+        // Chart 3: Income vs Expenses per month (line chart)
+        $monthlyIncomeVsExpenses = $this->getMonthlyIncomeVsExpenses($currentYear);
+
+        // Chart 4: Expenses by category (already have: $expensesByCategory)
+
+        // Chart 5: Monthly profit (area chart)
+        $monthlyProfit = $this->getMonthlyProfit($currentYear);
+
+        // Chart 6: Year-over-year comparison
+        $yearOverYear = $this->getYearOverYearComparison($currentYear);
+
         return view('dashboard', compact(
             'ytdRevenue',
             'ytdExpenses',
@@ -128,7 +144,134 @@ class DashboardController extends Controller
             'unpaidInvoicesTotal',
             'overdueInvoicesCount',
             'overdueInvoicesTotal',
-            'currentYear'
+            'currentYear',
+            'monthlyRevenue',
+            'monthlyIncomeVsExpenses',
+            'monthlyProfit',
+            'yearOverYear'
         ));
+    }
+
+    /**
+     * Get monthly revenue for current year
+     */
+    private function getMonthlyRevenue(int $year): array
+    {
+        $data = Invoice::income()
+            ->paid()
+            ->whereYear('invoice_date', $year)
+            ->selectRaw('MONTH(invoice_date) as month, SUM(total) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('total', 'month');
+
+        // Fill in missing months with 0
+        $months = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $months[] = $data->get($i, 0);
+        }
+
+        return $months;
+    }
+
+    /**
+     * Get monthly income vs expenses
+     */
+    private function getMonthlyIncomeVsExpenses(int $year): array
+    {
+        $income = Invoice::income()
+            ->paid()
+            ->whereYear('invoice_date', $year)
+            ->selectRaw('MONTH(invoice_date) as month, SUM(total) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('total', 'month');
+
+        $expenses = Invoice::expense()
+            ->paid()
+            ->whereYear('invoice_date', $year)
+            ->selectRaw('MONTH(invoice_date) as month, SUM(total) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('total', 'month');
+
+        $incomeData = [];
+        $expensesData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $incomeData[] = $income->get($i, 0);
+            $expensesData[] = $expenses->get($i, 0);
+        }
+
+        return [
+            'income' => $incomeData,
+            'expenses' => $expensesData,
+        ];
+    }
+
+    /**
+     * Get monthly profit
+     */
+    private function getMonthlyProfit(int $year): array
+    {
+        $income = Invoice::income()
+            ->paid()
+            ->whereYear('invoice_date', $year)
+            ->selectRaw('MONTH(invoice_date) as month, SUM(total) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('total', 'month');
+
+        $expenses = Invoice::expense()
+            ->paid()
+            ->whereYear('invoice_date', $year)
+            ->selectRaw('MONTH(invoice_date) as month, SUM(total) as total')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get()
+            ->pluck('total', 'month');
+
+        $profit = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $profit[] = ($income->get($i, 0) - $expenses->get($i, 0));
+        }
+
+        return $profit;
+    }
+
+    /**
+     * Get year-over-year comparison per quarter
+     */
+    private function getYearOverYearComparison(int $currentYear): array
+    {
+        $previousYear = $currentYear - 1;
+
+        $currentYearData = [];
+        $previousYearData = [];
+
+        for ($q = 1; $q <= 4; $q++) {
+            $current = Invoice::income()
+                ->paid()
+                ->forQuarter($currentYear, $q)
+                ->sum('total');
+
+            $previous = Invoice::income()
+                ->paid()
+                ->forQuarter($previousYear, $q)
+                ->sum('total');
+
+            $currentYearData[] = $current;
+            $previousYearData[] = $previous;
+        }
+
+        return [
+            'currentYear' => $currentYearData,
+            'previousYear' => $previousYearData,
+            'currentYearLabel' => $currentYear,
+            'previousYearLabel' => $previousYear,
+        ];
     }
 }
