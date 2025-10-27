@@ -18,6 +18,23 @@ class HerdenkingsportaalService
      */
     public function syncInvoices(int $lookbackDays = 30): array
     {
+        // Only sync in production environment
+        // Local/Staging has test data that should NOT be in administration
+        if (!app()->environment('production')) {
+            Log::info('Herdenkingsportaal sync skipped: not in production environment', [
+                'environment' => app()->environment(),
+            ]);
+
+            return [
+                'found' => 0,
+                'created' => 0,
+                'updated' => 0,
+                'skipped' => 0,
+                'failed' => 0,
+                'message' => 'Sync skipped: only runs in production (avoiding test data)',
+            ];
+        }
+
         $sync = ApiSync::create([
             'service' => 'herdenkingsportaal',
             'type' => 'invoices',

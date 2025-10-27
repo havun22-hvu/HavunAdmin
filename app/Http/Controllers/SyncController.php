@@ -54,6 +54,13 @@ class SyncController extends Controller
         try {
             $stats = $service->syncInvoices();
 
+            // Check if sync was skipped due to environment
+            if (isset($stats['message'])) {
+                return redirect()->back()->with('warning',
+                    $stats['message'] . ' (Environment: ' . app()->environment() . ')'
+                );
+            }
+
             return redirect()->back()->with('success', sprintf(
                 'Herdenkingsportaal sync voltooid! Gevonden: %d, Aangemaakt: %d, Bijgewerkt: %d',
                 $stats['found'],

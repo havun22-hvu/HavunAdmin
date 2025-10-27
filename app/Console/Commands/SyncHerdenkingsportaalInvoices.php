@@ -42,6 +42,15 @@ class SyncHerdenkingsportaalInvoices extends Command
             $stats = $service->syncInvoices($lookbackDays);
 
             $this->newLine();
+
+            // Check if sync was skipped due to environment
+            if (isset($stats['message'])) {
+                $this->warn($stats['message']);
+                $this->line('Current environment: ' . app()->environment());
+                $this->line('Sync only runs in production to avoid importing test data.');
+                return self::SUCCESS;
+            }
+
             $this->info('Sync completed successfully!');
             $this->table(
                 ['Metric', 'Count'],
