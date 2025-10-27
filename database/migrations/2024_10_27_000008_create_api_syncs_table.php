@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('api_syncs', function (Blueprint $table) {
             $table->id();
-            $table->enum('service', ['mollie', 'bunq', 'gmail']);
-            $table->string('type', 50)->comment('Type of sync: payments, transactions, emails');
+            $table->enum('service', ['herdenkingsportaal', 'mollie', 'bunq', 'gmail']);
+            $table->string('type', 50)->comment('Type of sync: invoices, payments, transactions, emails');
             $table->enum('status', ['success', 'failed', 'partial'])->default('success');
             $table->dateTime('started_at');
             $table->dateTime('completed_at')->nullable();

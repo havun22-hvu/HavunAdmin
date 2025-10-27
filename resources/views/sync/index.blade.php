@@ -29,7 +29,42 @@
             @endif
 
             <!-- Sync Services -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Herdenkingsportaal -->
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Herdenkingsportaal</h3>
+                            <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                            </svg>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="text-sm text-gray-500 dark:text-gray-400">Laatste sync</div>
+                            @if($lastHerdenkingsportaalSync)
+                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    {{ $lastHerdenkingsportaalSync->completed_at->format('d-m-Y H:i') }}
+                                </div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">
+                                    {{ $lastHerdenkingsportaalSync->items_processed }} items verwerkt
+                                </div>
+                            @else
+                                <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    Nog niet gesynchroniseerd
+                                </div>
+                            @endif
+                        </div>
+
+                        <form action="{{ route('sync.herdenkingsportaal') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700">
+                                Sync Nu
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- Mollie -->
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6">

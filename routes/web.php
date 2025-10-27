@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
 
     // API Sync
     Route::get('/sync', [SyncController::class, 'index'])->name('sync.index');
+    Route::post('/sync/herdenkingsportaal', [SyncController::class, 'syncHerdenkingsportaal'])->name('sync.herdenkingsportaal');
     Route::post('/sync/mollie', [SyncController::class, 'syncMollie'])->name('sync.mollie');
     Route::post('/sync/bunq', [SyncController::class, 'syncBunq'])->name('sync.bunq');
     Route::post('/sync/gmail', [SyncController::class, 'syncGmail'])->name('sync.gmail');

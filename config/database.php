@@ -113,6 +113,24 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+        /*
+        |--------------------------------------------------------------------------
+        | Herdenkingsportaal Database Connection
+        |--------------------------------------------------------------------------
+        |
+        | Direct read-only access to Herdenkingsportaal database for importing
+        | invoices and payment data. Both apps run on the same Hetzner server,
+        | so we can use direct database access instead of building an API.
+        |
+        */
+
+        'herdenkingsportaal' => [
+            'driver' => env('HERDENKINGSPORTAAL_DB_CONNECTION', 'sqlite'),
+            'database' => env('HERDENKINGSPORTAAL_DB_DATABASE', '/var/www/herdenkingsportaal/database/database.sqlite'),
+            'prefix' => '',
+            'foreign_key_constraints' => true,
+        ],
+
     ],
 
     /*

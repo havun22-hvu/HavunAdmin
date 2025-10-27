@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ApiSync;
+use App\Services\HerdenkingsportaalService;
 use App\Services\MollieService;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,11 @@ class SyncController extends Controller
     {
         $syncs = ApiSync::latest('started_at')
             ->paginate(20);
+
+        $lastHerdenkingsportaalSync = ApiSync::where('service', 'herdenkingsportaal')
+            ->where('status', 'success')
+            ->latest('completed_at')
+            ->first();
 
         $lastMollieSync = ApiSync::where('service', 'mollie')
             ->where('status', 'success')
@@ -33,10 +39,30 @@ class SyncController extends Controller
 
         return view('sync.index', compact(
             'syncs',
+            'lastHerdenkingsportaalSync',
             'lastMollieSync',
             'lastBunqSync',
             'lastGmailSync'
         ));
+    }
+
+    /**
+     * Sync Herdenkingsportaal invoices
+     */
+    public function syncHerdenkingsportaal(HerdenkingsportaalService $service)
+    {
+        try {
+            $stats = $service->syncInvoices();
+
+            return redirect()->back()->with('success', sprintf(
+                'Herdenkingsportaal sync voltooid! Gevonden: %d, Aangemaakt: %d, Bijgewerkt: %d',
+                $stats['found'],
+                $stats['created'],
+                $stats['updated']
+            ));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Herdenkingsportaal sync mislukt: ' . $e->getMessage());
+        }
     }
 
     /**

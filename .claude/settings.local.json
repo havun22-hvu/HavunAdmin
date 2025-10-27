@@ -1,6 +1,5 @@
 {
   "permissions": {
-    "defaultMode": "bypassPermissions",
     "allow": [
       "Read(//d/GitHub/**)",
       "Bash(git init:*)",
@@ -9,9 +8,15 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: Planning en documentatie fase\n\nVolledige planning documentatie voor HavunAdmin - bedrijfsadministratie systeem voor Havun.\n\nToegevoegd:\n- README.md - Project overzicht en structuur\n- BUSINESS-INFO.md - Bedrijfsgegevens, KvK, BTW-id, API credentials\n- TAX-REQUIREMENTS.md - Nederlandse belasting eisen en verplichtingen\n- FUNCTIONAL-REQUIREMENTS.md - Complete feature lijst en requirements\n- DATABASE-DESIGN.md - Volledige database structuur (11 tabellen)\n- API-SETUP-GUIDE.md - Stapsgewijze handleiding voor Gmail, Mollie, Bunq\n- PROJECT-STATUS.md - Status tracking en voortgang\n- .env.example - Environment variabelen template\n- .gitignore - Git ignore configuratie\n\nAPI Status:\n- Gmail API: Volledig geconfigureerd\n- Mollie API: Live keys beschikbaar\n- Bunq API: Nog te configureren (wacht op deployment)\n\nTech Stack:\n- Laravel + MySQL\n- Hosting: Hetzner (zelfde als Herdenkingsportaal)\n- Omgevingen: Local, Staging, Production\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git remote add:*)",
       "Bash(git branch:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(php:*)",
+      "Bash(composer --version:*)",
+      "Bash(dir)",
+      "Bash(touch:*)",
+      "Bash(mysql:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "defaultMode": "bypassPermissions"
   }
 }

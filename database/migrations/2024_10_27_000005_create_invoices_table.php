@@ -36,7 +36,8 @@ return new class extends Migration
             $table->string('reference')->nullable()->comment('External reference');
             $table->string('file_path')->nullable()->comment('Path to PDF');
 
-            $table->enum('source', ['manual', 'mollie', 'bunq', 'gmail'])->default('manual');
+            $table->enum('source', ['manual', 'herdenkingsportaal', 'mollie', 'bunq', 'gmail'])->default('manual');
+            $table->string('external_reference')->nullable()->comment('Original invoice number from source system');
             $table->string('mollie_payment_id')->nullable();
             $table->string('bunq_transaction_id')->nullable();
             $table->string('gmail_message_id')->nullable();
