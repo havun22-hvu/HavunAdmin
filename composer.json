@@ -24,8 +24,7 @@
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/",
-            "Mollie\\": "app/Stubs/Mollie/"
+            "Database\\Seeders\\": "database/seeders/"
         }
     },
     "autoload-dev": {
@@ -88,7 +87,7 @@
     "repositories": {
         "packagist.org": {
             "type": "composer",
-            "url": "http://packagist.org"
+            "url": "https://packagist.org"
         },
         "packagist": false
     }
