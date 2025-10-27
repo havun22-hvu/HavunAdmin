@@ -84,7 +84,7 @@ EXIT;
 
 ```bash
 cd /var/www/havunadmin-staging
-sudo git clone https://github.com/[YOUR_USERNAME]/HavunAdmin.git .
+sudo git clone https://github.com/havun22-hvu/HavunAdmin.git .
 sudo chown -R www-data:www-data /var/www/havunadmin-staging
 ```
 
@@ -92,7 +92,7 @@ sudo chown -R www-data:www-data /var/www/havunadmin-staging
 
 ```bash
 cd /var/www/havunadmin
-sudo git clone https://github.com/[YOUR_USERNAME]/HavunAdmin.git .
+sudo git clone https://github.com/havun22-hvu/HavunAdmin.git .
 sudo chown -R www-data:www-data /var/www/havunadmin
 ```
 
@@ -391,7 +391,7 @@ Na deployment, test:
 
 - **Staging**: https://staging-admin.havun.nl
 - **Production**: https://admin.havun.nl
-- **GitHub**: https://github.com/[YOUR_USERNAME]/HavunAdmin
+- **GitHub**: https://github.com/havun22-hvu/HavunAdmin
 - **Server**: SSH root@[server-ip]
 
 ---
