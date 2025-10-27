@@ -1,6 +1,6 @@
 # HavunAdmin - Server Deployment Guide
 
-Complete handleiding voor het deployen van HavunAdmin naar de Hetzner server.
+Complete handleiding voor het deployen van HavunAdmin naar een dedicated server.
 
 ## 📋 Overzicht
 
@@ -8,11 +8,14 @@ Complete handleiding voor het deployen van HavunAdmin naar de Hetzner server.
 - **Staging**: https://staging-admin.havun.nl
 - **Production**: https://admin.havun.nl
 
-**Server:**
-- Hetzner (zelfde server als Herdenkingsportaal)
-- Ubuntu met Apache2
+**Server Requirements:**
+- Ubuntu 22.04+ / Debian 11+
+- Apache2 (of Nginx)
 - PHP 8.2+
-- MySQL
+- MySQL 8.0+
+- Composer 2.x
+- Node.js 20+
+- Git
 
 ---
 
@@ -20,14 +23,20 @@ Complete handleiding voor het deployen van HavunAdmin naar de Hetzner server.
 
 ### 1. DNS Configuratie
 
-Voeg A-records toe bij je DNS provider:
+Voeg A-records toe bij je DNS provider (waar je havun.nl hebt geregistreerd):
 
 ```
-A    admin.havun.nl          -> [Hetzner IP]
-A    staging-admin.havun.nl  -> [Hetzner IP]
+A    admin.havun.nl          -> [YOUR-SERVER-IP]
+A    staging-admin.havun.nl  -> [YOUR-SERVER-IP]
 ```
 
-**Wachttijd:** ~1-24 uur voor DNS propagatie
+**Wachttijd:** ~5-60 minuten voor DNS propagatie (kan tot 24 uur duren)
+
+**Test DNS:**
+```bash
+nslookup staging-admin.havun.nl
+# Moet jouw server IP tonen
+```
 
 ---
 
@@ -68,13 +77,52 @@ CREATE DATABASE havunadmin_production CHARACTER SET utf8mb4 COLLATE utf8mb4_unic
 CREATE USER 'havunadmin_prod'@'localhost' IDENTIFIED BY 'STRONG_PASSWORD_HERE';
 GRANT ALL PRIVILEGES ON havunadmin_production.* TO 'havunadmin_prod'@'localhost';
 
--- Readonly user voor Herdenkingsportaal database access
-GRANT SELECT ON herdenkingsportaal_staging.* TO 'havunadmin_staging'@'localhost';
-GRANT SELECT ON herdenkingsportaal_production.* TO 'havunadmin_prod'@'localhost';
-
 FLUSH PRIVILEGES;
 EXIT;
 ```
+
+**Herdenkingsportaal Database Toegang (Remote):**
+
+HavunAdmin heeft read-only toegang nodig tot de Herdenkingsportaal database voor het importeren van facturen.
+
+**Optie A: Remote MySQL Connectie (Eenvoudigst)**
+
+Op de **Herdenkingsportaal server** (188.245.159.115):
+
+```bash
+ssh root@188.245.159.115
+mysql
+```
+
+```sql
+-- Create remote readonly user
+CREATE USER IF NOT EXISTS 'havunadmin_readonly'@'[YOUR-HAVUNADMIN-SERVER-IP]' IDENTIFIED BY 'STRONG_PASSWORD_HERE';
+GRANT SELECT ON herdenkingsportaal_staging.* TO 'havunadmin_readonly'@'[YOUR-HAVUNADMIN-SERVER-IP]';
+GRANT SELECT ON herdenkingsportaal_production.* TO 'havunadmin_readonly'@'[YOUR-HAVUNADMIN-SERVER-IP]';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+```bash
+# Configure MySQL for remote access
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+# Zoek: bind-address = 127.0.0.1
+# Wijzig naar: bind-address = 0.0.0.0
+
+# Restart MySQL
+sudo systemctl restart mysql
+
+# Firewall regel toevoegen (alleen voor HavunAdmin server)
+sudo ufw allow from [YOUR-HAVUNADMIN-SERVER-IP] to any port 3306
+```
+
+**Optie B: API Endpoint (Veiligst - Future)**
+
+Later te implementeren: Bouw een API endpoint in Herdenkingsportaal voor het ophalen van facturen.
+
+---
+
+**⚠️ BELANGRIJK: Welke optie je ook kiest, noteer de credentials! Je hebt deze nodig voor `.env` configuratie.**
 
 ---
 
