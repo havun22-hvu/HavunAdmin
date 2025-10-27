@@ -25,7 +25,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Mollie\\": "vendor/mollie/mollie-api-php/src/"
+            "Mollie\\": "app/Stubs/Mollie/"
         }
     },
     "autoload-dev": {
