@@ -36,15 +36,15 @@
 - [x] Bunq IBAN: NL75BUNQ2167592531
 - [x] Klein Ondernemersregeling (KOR): Aangevraagd
 
-### 🟡 In Progress
+### ✅ Documentatie - COMPLEET (27 oktober 2025)
 
-#### Documentatie (nog te maken)
-- [ ] TECHNICAL-ARCHITECTURE.md - Technische architectuur
-- [ ] API-INTEGRATIONS.md - Gedetailleerde API integratie specs
-- [ ] DATABASE-DESIGN.md - Database schema en relaties
-- [ ] SECURITY.md - Security en privacy maatregelen
-- [ ] IMPLEMENTATION-PLAN.md - Stapsgewijs implementatieplan
-- [ ] DEPLOYMENT.md - Deployment strategie
+#### Documentatie
+- [x] TECHNICAL-ARCHITECTURE.md - Technische architectuur ✅
+- [x] DATABASE-DESIGN.md - Database schema en relaties ✅
+- [x] IMPLEMENTATION-PLAN.md - Stapsgewijs implementatieplan ✅
+- [ ] API-INTEGRATIONS.md - Gedetailleerde API integratie specs (optioneel, info in TECHNICAL-ARCHITECTURE)
+- [ ] SECURITY.md - Security en privacy maatregelen (optioneel, info in TECHNICAL-ARCHITECTURE)
+- [ ] DEPLOYMENT.md - Deployment strategie (optioneel, info in IMPLEMENTATION-PLAN)
 
 ### ⏳ Gepland
 
@@ -144,45 +144,47 @@
 ## Nog Te Bepalen / Vragen
 
 ### Bedrijfsgegevens
-- [ ] Rechtsvorm (Eenmanszaak/BV/VOF?)
-- [ ] Vestigingsadres
-- [ ] Postadres (als anders)
-- [ ] Telefoonnummer
-- [ ] Website URL (als die er is)
+- [x] Rechtsvorm: Eenmanszaak ✅
+- [x] Vestigingsadres: Jacques Bloemhof 57, 1628 VN Hoorn ✅
+- [x] Postadres: Jacques Bloemhof 57, 1628 VN Hoorn ✅
+- [x] Telefoonnummer: 06-25058214 ✅
+- [x] Website URL: havun.nl ✅
+- [x] Admin portal: admin.havun.nl ✅
 
 ### Belastingen
-- [ ] Doe je zelf administratie of via accountant?
-- [ ] Wanneer loopt boekjaar? (meestal 1 jan - 31 dec)
-- [ ] Omzetbelasting aangifte per kwartaal of jaar?
-- [ ] Heb je al voorlopige aanslag?
+- [x] Administratie: Zelf (met HavunAdmin systeem) ✅
+- [x] Adviseur: Kennis met verstand van zaken (voor vragen) ✅
+- [x] Boekjaar: 1 januari - 31 december ✅
+- [x] Omzetbelasting aangifte: Per jaar (via aangifte inkomstenbelasting) ✅
+- [ ] Voorlopige aanslag: [NOG TE BEPALEN]
 
 ### Kosten
-- [ ] Hetzner hosting kosten per maand?
-- [ ] Bunq abonnement kosten?
-- [ ] Domain registratie kosten?
-- [ ] Welke software/tools met licenties?
-- [ ] Andere vaste maandelijkse kosten?
+- [x] Hetzner hosting: ~€5,00 per maand (wisselend) ✅
+- [x] Bunq abonnement: €13,99 per maand (Pro Business) ✅
+- [x] Domain registratie: €12,08 per jaar (2 domeinen via mijn.host) ✅
+- [x] Software/tools: Claude AI €108,90/maand (€90 excl. BTW) ✅
+- [x] Totale vaste kosten: ~€128,90 per maand ✅
 
 ### Projecten
-- [ ] Korte beschrijving IDSee?
-- [ ] Korte beschrijving Judotoernooi?
-- [ ] Wanneer gaan ze ongeveer live?
-- [ ] Via welke payment provider?
+- [x] IDSee: Hondenregistratie systeem (chipnummers + blockchain) - Nog te starten ✅
+- [x] Judotoernooi: Toernooi organisatie systeem - Bijna klaar, nog niet commercieel ✅
+- [ ] Live datum: Nog te bepalen
+- [ ] Payment provider: Nog te bepalen (IDSee), N.v.t. (Judotoernooi)
 
 ### Technical
-- [ ] Welk domein voor HavunAdmin? (admin.havun.nl?)
-- [ ] Zelfde Hetzner server als Herdenkingsportaal?
-- [ ] Aparte database of gedeelde MySQL instance?
-- [ ] SSL certificaat via Let's Encrypt?
+- [x] Domein voor HavunAdmin: admin.havun.nl ✅
+- [x] Hosting: Zelfde Hetzner server als Herdenkingsportaal ✅
+- [x] Database: Gedeelde MySQL instance (aparte database) ✅
+- [x] SSL certificaat: Via Let's Encrypt ✅
 
 ## Volgende Stappen
 
-### 1. Documentatie Afronden (1-2 dagen)
-- [ ] TECHNICAL-ARCHITECTURE.md schrijven
-- [ ] DATABASE-DESIGN.md maken
-- [ ] API-INTEGRATIONS.md uitwerken
-- [ ] SECURITY.md opstellen
-- [ ] IMPLEMENTATION-PLAN.md maken
+### 1. Documentatie Afronden ✅ COMPLEET (27 oktober 2025)
+- [x] TECHNICAL-ARCHITECTURE.md schrijven ✅
+- [x] DATABASE-DESIGN.md maken ✅
+- [x] IMPLEMENTATION-PLAN.md maken ✅
+- [x] PROJECT-STATUS.md bijwerken ✅
+- [x] Alle bedrijfsgegevens compleet ✅
 
 ### 2. Development Setup (1 dag)
 - [ ] Laravel installeren
@@ -217,9 +219,9 @@
 
 ## Tijdsschatting
 
-**Totaal**: 4-6 weken
+**Totaal**: 7-8 weken (part-time, ~20 uur/week)
 
-- Planning & Documentatie: ✅ 90% compleet
+- Planning & Documentatie: ✅ 100% COMPLEET (27 oktober 2025)
 - MVP Development: 1-2 weken
 - API Integraties: 1 week
 - Testing & Refinement: 1 week
