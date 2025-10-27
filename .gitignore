@@ -1,0 +1,60 @@
+# Laravel & PHP
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+
+# IDE
+/.idea
+/.vscode
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Database
+*.sqlite
+*.sqlite-journal
+
+# Backups
+/backups
+*.sql
+*.sql.gz
+
+# Uploads & Storage
+/public/uploads
+/storage/app/invoices
+/storage/app/pdfs
+
+# Sensitive API credentials (we bewaren alleen .env.example)
+.env.local
+.env.staging
+.env.production
+
+# Composer
+composer.phar
+
+# Node
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Testing
+/coverage
+.phpunit.cache
