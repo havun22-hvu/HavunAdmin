@@ -183,25 +183,29 @@ Zodra Herdenkingsportaal facturen maakt met memorial_reference in Mollie metadat
 ```
 Memorial Ref: 1a2b3c4d5e6f (3 transacties)
 
-  [MASTER] GMAIL-19a1c2a0ad
-   └─ Gmail | €35,00 | Premium Monument - Gerrit Willem van Unen
+  [MASTER] BUNQ-TRX-54321
+   └─ Bunq | €35,00 | Echte bankrekening ontvangst
 
-  [DUPLICATE] MOL-2025-0042
-   └─ Mollie | €35,00 | 100% match
+  [DUPLICATE] HERD-2025-0042
+   └─ Herdenkingsportaal | €35,00 | Bewijsstuk/factuur | 100% match
 
-  [DUPLICATE] BUNQ-TRX-54321
-   └─ Bunq | €35,00 | 100% match
+  [DUPLICATE] GMAIL-19a1c2a0ad
+   └─ Gmail | €35,00 | Email backup | 100% match
 ```
 
-### Master Priority
+**Simpel**: Bunq is de master (het geld dat echt binnenkomt), Herdenkingsportaal is het bewijsstuk, Gmail is backup.
+
+### Master Priority (Vereenvoudigd)
 
 Als meerdere invoices worden geïmporteerd voordat matching plaatsvindt, wordt de master bepaald op basis van:
 
-1. **Herdenkingsportaal** (hoogste priority - meest authoritatief)
-2. **Gmail** (volledige details, factuur PDF)
-3. **Mollie** (betaling info)
-4. **Bunq** (alleen bank transactie)
+1. **Bunq** (hoogste priority - echte geldstroom, de waarheid)
+2. **Herdenkingsportaal** (officiële factuur, bewijsstuk voor Bunq ontvangst)
+3. **Gmail** (email backup, alleen als Bunq/Herdenkingsportaal ontbreekt)
+4. **Mollie** (tussenstap, alleen voor debugging)
 5. **Manual** (handmatig ingevoerd)
+
+**Logica**: Bunq is leidend want dat is het geld dat echt binnenkomt. De Herdenkingsportaal factuur is het bewijsstuk voor die Bunq ontvangst. Mollie is alleen de payment processor (tussenstap) - klant betaalt via Mollie, geld komt binnen op Bunq.
 
 ---
 

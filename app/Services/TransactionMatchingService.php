@@ -69,23 +69,27 @@ class TransactionMatchingService
     /**
      * Determine which invoice should be the master record
      *
-     * Priority:
-     * 1. Herdenkingsportaal source (most authoritative)
-     * 2. Gmail (has full details)
-     * 3. Mollie (has payment info)
-     * 4. Bunq (just bank transaction)
+     * Priority (Vereenvoudigd):
+     * 1. Bunq (echte bankrekening geldstroom - de waarheid)
+     * 2. Herdenkingsportaal (officiële factuur - bewijsstuk voor Bunq ontvangst)
+     * 3. Gmail (email backup - alleen als Bunq/Herdenkingsportaal ontbreekt)
+     * 4. Mollie (payment processor - alleen voor debugging, niet primair)
      * 5. Manual entry
+     *
+     * Logica: Bunq is leidend want dat is wat echt binnenkomt.
+     * Herdenkingsportaal factuur is het bewijsstuk voor die Bunq ontvangst.
+     * Mollie is alleen tussenstap (via Mollie betaald → komt in Bunq binnen).
      */
     protected function determineMaster(Invoice $newInvoice, $existingMatches): Invoice
     {
         $allInvoices = collect([$newInvoice])->merge($existingMatches);
 
         $sourcePriority = [
-            'herdenkingsportaal' => 1,
-            'gmail' => 2,
-            'mollie' => 3,
-            'bunq' => 4,
-            'manual' => 5,
+            'bunq' => 1,              // Echte geldstroom
+            'herdenkingsportaal' => 2, // Officiële factuur/bewijsstuk
+            'gmail' => 3,             // Email backup
+            'mollie' => 4,            // Tussenstap (alleen voor debugging)
+            'manual' => 5,            // Handmatig ingevoerd
         ];
 
         // Sort by source priority (lower number = higher priority)

@@ -20,7 +20,9 @@
       "Bash(composer require:*)",
       "Bash(dir:*)",
       "Bash(del \"d:\\GitHub\\HavunAdmin\\database\\migrations\\2025_10_27_185510_create_oauth_tokens_table.php\")",
-      "Bash(sqlite3:*)"
+      "Bash(sqlite3:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nAdd duplicate matching system with memorial reference tracking\n\nFeatures toegevoegd:\n- Gmail API integratie met OAuth2 authenticatie\n- Email scanning en PDF downloads\n- Transaction matching service voor duplicate detectie\n- Memorial reference extractie (eerste 12 chars van monument UUID)\n- Reconciliation dashboard voor het bekijken en beheren van duplicaten\n- Master-duplicate linking systeem met priority (Herdenkingsportaal > Gmail > Mollie > Bunq)\n- Automatische koppeling van transacties uit verschillende bronnen\n\nDatabase wijzigingen:\n- Migration voor memorial_reference field (12 chars, indexed)\n- Migration voor parent_invoice_id (foreign key naar master invoice)\n- Migration voor is_duplicate flag\n- Migration voor match_confidence en match_notes\n\nNieuwe bestanden:\n- app/Services/GmailService.php - Gmail API integratie\n- app/Services/TransactionMatchingService.php - Duplicate matching logic\n- app/Http/Controllers/ReconciliationController.php - Reconciliation UI\n- resources/views/reconciliation/index.blade.php - Dashboard view\n- DEPLOYMENT-GUIDE.md - Volledige deployment instructies\n\nAangepaste bestanden:\n- app/Models/Invoice.php - Relaties voor duplicates\n- app/Http/Controllers/SyncController.php - Gmail sync methods\n- routes/web.php - Reconciliation routes\n- Navigation - Link naar Reconciliation pagina\n\nStatus: Klaar voor productie deployment\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": [],
