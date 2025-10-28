@@ -27,7 +27,10 @@
       "Bash(ssh root@46.224.31.30 -t \"killall -9 mysqld_safe mysqld 2>/dev/null; mkdir -p /var/run/mysqld; chown mysql:mysql /var/run/mysqld; systemctl start mysql; echo ''MySQL herstart compleet''\")",
       "Bash(ssh root@46.224.31.30 -t \"mysql -e \"\"ALTER USER ''root''@''localhost'' IDENTIFIED WITH mysql_native_password BY ''7Ut0xaLzh7s^T2!DmQKR''; FLUSH PRIVILEGES;\"\" && echo ''MySQL wachtwoord ingesteld!''\")",
       "Bash(ssh root@46.224.31.30 -t \"cd /var/www/staging && mysql -u root -p''7Ut0xaLzh7s^T2!DmQKR'' -e ''CREATE DATABASE IF NOT EXISTS havunadmin_staging CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'' && php artisan migrate --force && echo ''Database en migrations compleet!''\")",
-      "Bash(ssh root@46.224.31.30 -t \"sudo mysql -e \"\"ALTER USER ''root''@''localhost'' IDENTIFIED WITH mysql_native_password BY ''7Ut0xaLzh7s^T2!DmQKR''; FLUSH PRIVILEGES; CREATE DATABASE IF NOT EXISTS havunadmin_staging CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"\" && echo ''Database aangemaakt!''\")"
+      "Bash(ssh root@46.224.31.30 -t \"sudo mysql -e \"\"ALTER USER ''root''@''localhost'' IDENTIFIED WITH mysql_native_password BY ''7Ut0xaLzh7s^T2!DmQKR''; FLUSH PRIVILEGES; CREATE DATABASE IF NOT EXISTS havunadmin_staging CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;\"\" && echo ''Database aangemaakt!''\")",
+      "Bash(node generate-icons.js:*)",
+      "Bash(copy:*)",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": [],
