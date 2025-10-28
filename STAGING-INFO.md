@@ -168,12 +168,27 @@ A    admin.havun.nl            46.224.31.30
 - ✅ Composer dependencies installed
 - ✅ NPM assets gebuild
 
-**Nog Te Doen:**
+**🚨 URGENT - Security Hardening (Morgen!):**
+- [ ] **UFW Firewall** - Alleen SSH/HTTP/HTTPS toestaan (10 min)
+- [ ] **Fail2ban** - Brute force protection (10 min)
+- [ ] **.env Security** - APP_DEBUG=false, MOLLIE_KEY, permissions 600 (15 min)
+- [ ] **Apache Security** - Hide version, security headers (10 min)
+- [ ] **MySQL Dedicated User** - App niet als root (15 min)
+- [ ] **Security Verificatie** - Alle checks groen (5 min)
+
+**Nog Te Doen (Deze Week):**
+- [ ] Mollie sync testen (nu MOLLIE_KEY toevoegen)
+- [ ] Dashboard volledig testen (alle 6 charts)
+- [ ] CRUD testen (invoices, expenses)
+- [ ] Reports testen (CSV exports)
+- [ ] Backup script installeren
 - [ ] Herdenkingsportaal remote database access configureren
 - [ ] Gmail OAuth flow testen
 - [ ] Duplicate matching functionaliteit testen
 - [ ] Reconciliation dashboard testen
 - [ ] Bunq API configureren
+
+**Later (Volgende Week):**
 - [ ] Deploy naar production (admin.havun.nl)
 
 ---

@@ -30,6 +30,9 @@ Een all-in-one administratie platform dat:
 - **Database**: 14 tabellen, all migrations completed
 - **Status**: Fully operational, ready for testing
 
+⚠️ **SECURITY WARNING**: Server is nog niet gehard! Zie [SECURITY-HARDENING.md](SECURITY-HARDENING.md) voor kritieke security fixes.
+📋 **TODO MORGEN**: Zie [TODO-MORGEN.md](TODO-MORGEN.md) voor complete stappenplan (security + testing)
+
 ### Production Environment ⏳ Nog Te Deployen
 - **URL**: admin.havun.nl (gepland)
 - **Status**: Wacht op staging testing completion
@@ -203,6 +206,8 @@ Open http://localhost:8000 in je browser.
 
 | Bestand | Beschrijving |
 |---------|--------------|
+| [TODO-MORGEN.md](TODO-MORGEN.md) | 🔥 **Stappenplan voor morgen** (security + testing) |
+| [SECURITY-HARDENING.md](SECURITY-HARDENING.md) | 🛡️ **Kritieke security fixes** (firewall, fail2ban, etc.) |
 | [PROJECT-STATUS.md](PROJECT-STATUS.md) | Complete project status, deployment history, lessons learned |
 | [STAGING-INFO.md](STAGING-INFO.md) | Staging server info, credentials, deployment checklist |
 | [DEPLOYMENT.md](DEPLOYMENT.md) | Complete deployment guide voor staging + production |

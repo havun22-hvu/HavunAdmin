@@ -402,6 +402,20 @@
 - ⚠️ Gmail OAuth testing
 - ⚠️ Cron jobs voor automatische sync
 
+**🚨 KRITIEKE SECURITY ISSUES (NU):**
+- ⚠️ **FIREWALL NIET ACTIEF** - Alle poorten staan open!
+- ⚠️ **GEEN FAIL2BAN** - Geen brute force protection
+- ⚠️ **APP_DEBUG=true** - Debug mode toont sensitive info
+- ⚠️ **DATABASE ROOT USER** - App draait met MySQL root
+- ⚠️ **APACHE VERSION ZICHTBAAR** - Hackers zien kwetsbaarheden
+- ⚠️ **.ENV PERMISSIONS** - Te open (644 i.p.v. 600)
+
+**📋 PLAN MORGEN (29 oktober):**
+- 🔥 PRIORITEIT 1: Security hardening (60 min)
+- ⚡ PRIORITEIT 2: Mollie sync testen (20 min)
+- ⚡ PRIORITEIT 3: Applicatie testen (40 min)
+- Zie **TODO-MORGEN.md** voor complete stappenplan
+
 **Lessons Learned:**
 1. **Altijd server keuze afstemmen met gebruiker** - Niet automatisch aannemen
 2. **SQLite development ≠ MySQL production** - Date functions zijn verschillend
